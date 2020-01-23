@@ -430,10 +430,12 @@ public class DirectedMatrixGraph<T> implements GraphADT<T> {
                 target = previous[target];
             }
 
-        } else {
+        }
+
+        if (resultList.isEmpty()) {
             throw new PathNotFoundException();
         }
-        
+
         return resultList.iterator();
     }
 

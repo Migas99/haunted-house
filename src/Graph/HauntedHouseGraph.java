@@ -5,16 +5,29 @@ import LinkedList.ArrayUnorderedList;
 
 public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implements HauntedHouseGraphADT<T> {
 
-    private T startPosition;
+    private String playerName;
+    private String mapName;
+    private double healthPoints;
     private T endPosition;
     private T position;
-    private double healthPoints;
+
+    public void setMapName(String mapName) {
+        this.mapName = mapName;
+    }
+
+    public void setPlayerName(String name) {
+        this.playerName = name;
+    }
+
+    public void setHealthPoints(double healthPoints) {
+        this.healthPoints = healthPoints;
+    }
 
     /**
-     * Checks if the actual position of the player is the outside, wich means
-     * that the player completed is the game.
+     * Checks if the actual position of the playerName is the outside, wich
+     * means that the playerName completed is the game.
      *
-     * @return if the player completed the game or not
+     * @return if the playerName completed the game or not
      */
     @Override
     public boolean isComplete() {
@@ -22,9 +35,9 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implement
     }
 
     /**
-     * Checks if the player still has health points.
+     * Checks if the playerName still has health points.
      *
-     * @return if the player health points if bigger than 0
+     * @return if the playerName health points if bigger than 0
      */
     @Override
     public boolean isAlive() {
@@ -32,9 +45,9 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implement
     }
 
     /**
-     * Change the position of the player to the defined position.
+     * Change the position of the playerName to the defined position.
      *
-     * @param nextPosition new position of the player
+     * @param nextPosition new position of the playerName
      * @return if the the transaction was a sucess
      * @throws VertexNotFoundException if the vertex target isnt found
      */
@@ -57,9 +70,9 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implement
     }
 
     /**
-     * Returns the current position of the player.
+     * Returns the current position of the playerName.
      *
-     * @return the current position of the player
+     * @return the current position of the playerName
      */
     @Override
     public T getCurrentPosition() {
@@ -83,7 +96,7 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implement
 
     @Override
     public void setStartPosition(T vertex) {
-        this.startPosition = vertex;
+        this.position = vertex;
     }
 
     @Override
