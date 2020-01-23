@@ -2,6 +2,8 @@ package Graph;
 
 import BinaryTree.LinkedHeap;
 import Exceptions.EmptyCollectionException;
+import Exceptions.PathNotFoundException;
+import Exceptions.VertexNotFoundException;
 
 public class WeightDirectedMatrixGraph<T> extends DirectedMatrixGraph<T> implements WeightGraphADT<T> {
 
@@ -35,17 +37,21 @@ public class WeightDirectedMatrixGraph<T> extends DirectedMatrixGraph<T> impleme
      * @param vertex2 vertex destination
      * @return the cost of the transaction
      * @throws EmptyCollectionException if the collection is empty
+     * @throws PathNotFoundException if there's not a possible path between the
+     * vertexs
+     * @throws VertexNotFoundException if one or both of the vertexs are not
+     * found
      */
     @Override
-    public double shortestPathWeight(T vertex1, T vertex2) throws EmptyCollectionException {
+    public double shortestPathWeight(T vertex1, T vertex2) throws EmptyCollectionException, PathNotFoundException, VertexNotFoundException {
         int source = this.getIndex(vertex1);
         int destination = this.getIndex(vertex2);
 
         if (this.indexIsValid(source) && this.indexIsValid(destination)) {
             return this.dijkstra(source, destination);
+        } else {
+            throw new VertexNotFoundException();
         }
-
-        return -9.99;
     }
 
     /**
@@ -56,7 +62,7 @@ public class WeightDirectedMatrixGraph<T> extends DirectedMatrixGraph<T> impleme
      * @param destination vertex target
      * @return cost of the lowest cost path
      */
-    private double dijkstra(int source, int destination) {
+    private double dijkstra(int source, int destination) throws PathNotFoundException {
         double[] weight = new double[this.numVertices];
         boolean[] isVertexUsed = new boolean[this.numVertices];
 
@@ -80,10 +86,10 @@ public class WeightDirectedMatrixGraph<T> extends DirectedMatrixGraph<T> impleme
             }
         }
 
-        if(!isVertexUsed[destination]){
-            return -9.99;
+        if (!isVertexUsed[destination]) {
+            throw new PathNotFoundException();
         }
-        
+
         return weight[destination];
     }
 

@@ -9,6 +9,10 @@ package Exceptions;
  *
  * @author Asus
  */
-public class EdgeNotFound {
+public class PathNotFoundException extends Throwable {
+    
+    public PathNotFoundException(){
+        System.out.println("Not possible to reach!");
+    }
     
 }

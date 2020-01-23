@@ -1,6 +1,8 @@
 package Graph;
 
 import Exceptions.EmptyCollectionException;
+import Exceptions.PathNotFoundException;
+import Exceptions.VertexNotFoundException;
 import java.util.Iterator;
 
 /**
@@ -66,8 +68,12 @@ public interface GraphADT<T> {
      * @param targetVertex the ending vertex
      * @return an iterator that contains the shortest path between the two
      * vertices
+     * @throws EmptyCollectionException if the collection is empty
+     * @throws VertexNotFoundException if one or both of the vertexs
+     * @throws PathNotFoundException if there's not a possible path between the
+     * vertexs
      */
-    public Iterator iteratorShortestPath(T startVertex, T targetVertex) throws EmptyCollectionException;
+    public Iterator iteratorShortestPath(T startVertex, T targetVertex) throws EmptyCollectionException, VertexNotFoundException, PathNotFoundException;
 
     /**
      * Returns true if this graph is empty, false otherwise.
@@ -80,6 +86,7 @@ public interface GraphADT<T> {
      * Returns true if this graph is connected, false otherwise.
      *
      * @return true if this graph is connected
+     * @throws EmptyCollectionException if the collection is empty
      */
     public boolean isConnected() throws EmptyCollectionException;
 

@@ -1,6 +1,8 @@
 package Graph;
 
 import Exceptions.EmptyCollectionException;
+import Exceptions.PathNotFoundException;
+import Exceptions.VertexNotFoundException;
 import LinkedList.ArrayUnorderedList;
 import Queue.LinkedQueue;
 import Stack.LinkedList;
@@ -247,18 +249,21 @@ public class DirectedMatrixGraph<T> implements GraphADT<T> {
      * @param targetVertex
      * @return
      * @throws EmptyCollectionException if the collection is empty
+     * @throws VertexNotFoundException if one or both of the vertexs are not
+     * found
+     * @throws PathNotFoundException if there's not a possible path between the
+     * vertexs
      */
     @Override
-    public Iterator iteratorShortestPath(T startVertex, T targetVertex) throws EmptyCollectionException {
-        Iterator iterator = null;
+    public Iterator iteratorShortestPath(T startVertex, T targetVertex) throws EmptyCollectionException, VertexNotFoundException, PathNotFoundException {
         int source = this.getIndex(startVertex);
         int destination = this.getIndex(targetVertex);
 
         if (this.indexIsValid(source) && this.indexIsValid(destination)) {
-            iterator = this.dijkstra(source, destination);
+            return this.dijkstra(source, destination);
+        } else {
+            throw new VertexNotFoundException();
         }
-
-        return iterator;
     }
 
     /**
@@ -388,18 +393,15 @@ public class DirectedMatrixGraph<T> implements GraphADT<T> {
      * @param destination vertex target
      * @return shortest path between the source vertex and target vertex
      */
-    private Iterator dijkstra(int source, int destination) throws EmptyCollectionException {
+    private Iterator dijkstra(int source, int destination) throws EmptyCollectionException, PathNotFoundException {
         double[] distances = new double[this.numVertices];
-
-        int[] previous = new int[this.numVertices];
-        for (int i = 0; i < this.numVertices; i++) {
-            previous[i] = -1;
-        }
-
         boolean[] isVertexUsed = new boolean[this.numVertices];
+        int[] previous = new int[this.numVertices];
+
         for (int i = 0; i < this.numVertices; i++) {
             distances[i] = Double.MAX_VALUE;
             isVertexUsed[i] = false;
+            previous[i] = -1;
         }
 
         distances[source] = 0;
@@ -426,6 +428,9 @@ public class DirectedMatrixGraph<T> implements GraphADT<T> {
                 resultList.addToFront(this.vertices[target]);
                 target = previous[target];
             }
+
+        } else {
+            throw new PathNotFoundException();
         }
 
         return resultList.iterator();

@@ -5,7 +5,7 @@ import Gameplay.Player;
 
 public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> {
 
-    private int position;
+    private T position;
     private final String difficulty;
     private final int healthPoints;
 
@@ -15,18 +15,22 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> {
         this.position = this.getInitialPosition("Entrada");
     }
 
-    public int getPosition() {
+    public boolean changePosition(T position, T nextPosition){
+        return true;
+    }
+    
+    public T getPosition() {
         return position;
     }
 
-    public void setPosition(int position) {
+    public void setPosition(T position) {
         this.position = position;
     }
 
-    private int getInitialPosition(String startVertex) throws VertexNotFoundException {
+    private T getInitialPosition(String startVertex) throws VertexNotFoundException {
         for (int i = 0; i < this.numVertices; i++) {
             if (this.vertices[i] == startVertex) {
-                return i;
+                return this.vertices[i];
             }
         }
 
