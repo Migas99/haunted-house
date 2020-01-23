@@ -17,15 +17,18 @@ public class Start {
         house.addVertex("Entrada");
         house.addVertex("Sotao");
 
-        house.addEdge("Entrada", "Cozinha", 2);
-        house.addEdge("Cozinha", "Sala", 5);
-        house.addEdge("Sala", "Saida", 3);
+        house.addEdge("Entrada", "Cozinha", 0);
+        house.addEdge("Cozinha", "Sala", 0);
+        house.addEdge("Sala", "Saida", 0);
+       // house.addEdge("Entrada", "Saida", 0);
 
         Iterator iterator = house.iteratorShortestPath("Entrada", "Saida");
         
         while(iterator.hasNext()){
             System.out.println("Iterator: " + iterator.next());
         }
+        
+        System.out.println(house.toString());
         
     }
 }

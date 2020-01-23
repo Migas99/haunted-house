@@ -1,12 +1,12 @@
-package Gameplay;
+package Models;
 
 public class Player {
 
     private final String player;
-    private final String difficulty;
-    private int healthPoints;
+    private final int difficulty;
+    private double healthPoints;
 
-    public Player(String player, String difficulty) {
+    public Player(String player, int difficulty) {
         this.player = player;
         this.difficulty = difficulty;
         this.healthPoints = 100;
@@ -16,11 +16,11 @@ public class Player {
         return player;
     }
 
-    public String getDifficulty() {
+    public int getDifficulty() {
         return difficulty;
     }
 
-    public int getHealthPoints() {
+    public double getHealthPoints() {
         return healthPoints;
     }
 

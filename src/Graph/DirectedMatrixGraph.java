@@ -247,7 +247,7 @@ public class DirectedMatrixGraph<T> implements GraphADT<T> {
      *
      * @param startVertex
      * @param targetVertex
-     * @return
+     * @return iterator with the shortest parth
      * @throws EmptyCollectionException if the collection is empty
      * @throws VertexNotFoundException if one or both of the vertexs are not
      * found
@@ -324,6 +324,7 @@ public class DirectedMatrixGraph<T> implements GraphADT<T> {
         String toString = "";
 
         for (int i = 0; i < this.numVertices; i++) {
+            toString = toString + this.vertices[i];
             for (int j = 0; j < this.numVertices; j++) {
                 toString = toString + " | " + this.adjMatrix[i][j];
             }
@@ -432,7 +433,7 @@ public class DirectedMatrixGraph<T> implements GraphADT<T> {
         } else {
             throw new PathNotFoundException();
         }
-
+        
         return resultList.iterator();
     }
 

@@ -92,7 +92,7 @@ public class WeightDirectedMatrixGraph<T> extends DirectedMatrixGraph<T> impleme
 
         return weight[destination];
     }
-
+    
     /**
      * Returns a minimum spanning tree of the network.
      *

@@ -1,33 +1,57 @@
 package Graph;
 
 import Exceptions.VertexNotFoundException;
-import Gameplay.Player;
+import Models.Player;
 
-public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> {
+public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implements HauntedHouseGraphADT<T> {
 
+    private final T startPosition;
+    private final T endPosition;
     private T position;
-    private final String difficulty;
-    private final int healthPoints;
+    private double healthPoints;
 
     public HauntedHouseGraph(Player player) throws VertexNotFoundException {
-        this.difficulty = player.getDifficulty();
         this.healthPoints = player.getHealthPoints();
-        this.position = this.getInitialPosition("Entrada");
+        this.startPosition = this.getPosition("Entrada");
+        this.endPosition = this.getPosition("Exterior");
+        this.position = this.startPosition;
+        this.setDifficulty(player.getDifficulty());
     }
 
-    public boolean changePosition(T position, T nextPosition){
-        return true;
-    }
-    
-    public T getPosition() {
-        return position;
+    @Override
+    public boolean isComplete() {
+        return this.position == this.endPosition;
     }
 
-    public void setPosition(T position) {
-        this.position = position;
+    @Override
+    public boolean isAlive() {
+        return this.healthPoints > 0;
     }
 
-    private T getInitialPosition(String startVertex) throws VertexNotFoundException {
+    @Override
+    public boolean changePosition(T nextPosition) throws VertexNotFoundException {
+        int positionIndex = this.getIndex(this.position);
+        int nextPositionIndex = this.getIndex(nextPosition);
+
+        if (this.indexIsValid(positionIndex) && this.indexIsValid(nextPositionIndex)) {
+            if (this.adjMatrix[positionIndex][nextPositionIndex] >= 0) {
+                this.position = nextPosition;
+                this.healthPoints = this.healthPoints - this.adjMatrix[positionIndex][nextPositionIndex];
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            throw new VertexNotFoundException();
+        }
+    }
+
+    @Override
+    public T getCurrentPosition() {
+        return this.position;
+    }
+
+    private T getPosition(String startVertex) throws VertexNotFoundException {
         for (int i = 0; i < this.numVertices; i++) {
             if (this.vertices[i] == startVertex) {
                 return this.vertices[i];
@@ -36,4 +60,15 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> {
 
         throw new VertexNotFoundException();
     }
+
+    private void setDifficulty(int level) {
+        for (int i = 0; i < this.numVertices; i++) {
+            for (int j = 0; j < this.numVertices; j++) {
+                if (this.adjMatrix[i][j] > 0) {
+                    this.adjMatrix[i][j] = this.adjMatrix[i][j] * level;
+                }
+            }
+        }
+    }
+
 }
