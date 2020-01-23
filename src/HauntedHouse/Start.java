@@ -23,10 +23,12 @@ public class Start {
        // house.addEdge("Entrada", "Saida", 0);
 
         Iterator iterator = house.iteratorShortestPath("Entrada", "Saida");
+        double a = house.shortestPathWeight("Entrada", "Saida");
         
         while(iterator.hasNext()){
             System.out.println("Iterator: " + iterator.next());
         }
+        System.out.println(a);
         
         System.out.println(house.toString());
         
