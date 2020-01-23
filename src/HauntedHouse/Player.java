@@ -1,4 +1,4 @@
-package Models;
+package HauntedHouse;
 
 public class Player {
 

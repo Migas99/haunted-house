@@ -4,7 +4,6 @@ import Exceptions.EmptyCollectionException;
 import Exceptions.PathNotFoundException;
 import Exceptions.VertexNotFoundException;
 import Graph.WeightDirectedMatrixGraph;
-import Models.MapManager;
 import java.io.FileNotFoundException;
 import java.util.Iterator;
 
@@ -26,7 +25,7 @@ public class Start {
        // house.addEdge("Entrada", "Saida", 0);
 
         Iterator iterator = house.iteratorShortestPath("entrada", "exterior");
-        double a = house.shortestPathWeight("entrada", "cozinha");
+        double a = house.shortestPathWeight("entrada", "exterior");
         
         while(iterator.hasNext()){
             System.out.println("Iterator: " + iterator.next());

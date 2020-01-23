@@ -1,4 +1,4 @@
-package Models;
+package HauntedHouse;
 
 import Graph.HauntedHouseGraph;
 import LinkedList.ArrayUnorderedList;
