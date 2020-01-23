@@ -94,7 +94,7 @@ public class MapManager {
                  * Se o connection for "entrada", significa que a ligação será
                  * inversa
                  */
-                if ("entrada".equals(aposento)) {
+                if (connection.equals("entrada")) {
                     house.addEdge(connection, aposento, 0);
                 } else {
                     house.addEdge(aposento, connection, cost);

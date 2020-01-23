@@ -25,13 +25,13 @@ public class Start {
         house.addEdge("Sala", "Saida", 0);*/
        // house.addEdge("Entrada", "Saida", 0);
 
-        /*Iterator iterator = house.iteratorShortestPath("entrada", "exterior");
+        Iterator iterator = house.iteratorShortestPath("entrada", "exterior");
         double a = house.shortestPathWeight("entrada", "cozinha");
         
         while(iterator.hasNext()){
             System.out.println("Iterator: " + iterator.next());
         }
-        System.out.println(a);*/
+        System.out.println(a);
         
         System.out.println(house.toString());
         
