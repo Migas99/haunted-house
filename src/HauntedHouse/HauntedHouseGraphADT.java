@@ -3,6 +3,7 @@ package HauntedHouse;
 import Exceptions.VertexNotFoundException;
 import Graph.WeightGraphADT;
 import LinkedList.ArrayUnorderedList;
+import java.io.FileNotFoundException;
 
 public interface HauntedHouseGraphADT<T> extends WeightGraphADT<T> {
 
@@ -48,7 +49,6 @@ public interface HauntedHouseGraphADT<T> extends WeightGraphADT<T> {
     /**
      * Method responsible for changing the amount of HP lost when the player
      * enters a room with a ghost, depending on the level of difficulty.
-     *
      */
     public void setDifficulty();
 
@@ -67,14 +67,16 @@ public interface HauntedHouseGraphADT<T> extends WeightGraphADT<T> {
     public void setEndPosition(T vertex);
 
     /**
-     *
+     * Method responsible for adding a new classification to the database.
      */
     public void addNewClassification();
 
     /**
-     *
-     * @return
+     * Returns the classification table.
+     * 
+     * @return classification table
+     * @throws FileNotFoundException if the classifications file is not found
      */
-    public String getClassificationTable();
+    public String getClassificationTable() throws FileNotFoundException;
 
 }

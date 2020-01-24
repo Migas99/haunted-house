@@ -3,17 +3,24 @@ package HauntedHouse;
 import Exceptions.VertexNotFoundException;
 import Graph.WeightDirectedMatrixGraph;
 import LinkedList.ArrayUnorderedList;
+import java.io.FileNotFoundException;
 
 public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implements HauntedHouseGraphADT<T> {
 
-    private String playerName = null;
+    private String playerName;
     private String mapName;
     private double healthPoints;
     private int level;
     private T endPosition;
     private T position;
-    private ArrayUnorderedList<T> pathTaken = new ArrayUnorderedList<>();
+    private final ArrayUnorderedList<T> pathTaken;
     private ClassificationManager<T> classification;
+
+    public HauntedHouseGraph() {
+        super();
+        this.playerName = null;
+        this.pathTaken = new ArrayUnorderedList<>();
+    }
 
     /**
      * Change the position of the playerName to the defined position.
@@ -132,6 +139,9 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implement
         this.endPosition = vertex;
     }
 
+    /**
+     * Method responsible for adding a new classification to the database.
+     */
     @Override
     public void addNewClassification() {
         if (this.playerName != null) {
@@ -140,8 +150,14 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implement
         }
     }
 
+    /**
+     * Returns the classification table.
+     *
+     * @return classification table
+     * @throws FileNotFoundException if the classifications file is not found
+     */
     @Override
-    public String getClassificationTable() {
+    public String getClassificationTable() throws FileNotFoundException {
         this.classification = new ClassificationManager<>();
         return this.classification.getClassificationTable();
     }
