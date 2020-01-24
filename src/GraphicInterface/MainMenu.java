@@ -11,8 +11,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -339,7 +337,7 @@ public class MainMenu extends JFrame {
 
     public class Wait implements Runnable {
 
-        private JLabel label;
+        private final JLabel label;
 
         public Wait(JLabel label) {
             this.label = label;
