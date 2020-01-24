@@ -3,6 +3,7 @@ package GraphicInterface;
 import HauntedHouse.HauntedHouseGraph;
 import HauntedHouse.MapManager;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -17,12 +18,13 @@ import javax.swing.JFrame;
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 public class MainMenu extends JFrame {
-    
+
     HauntedHouseGraph mapGraph = new HauntedHouseGraph();
-     boolean soundEnable =  true;
+    boolean soundEnable = true;
     MapManager mapManager = new MapManager();
     JButton playButton;
     JButton mapButton;
@@ -39,7 +41,7 @@ public class MainMenu extends JFrame {
 
         mainMenu();
         pressPlayButtonMenu();
-        
+
         this.setVisible(true);
     }
 
@@ -116,7 +118,7 @@ public class MainMenu extends JFrame {
             confirmButton.setText("Confirm");
             confirmButton.setPreferredSize(new Dimension(100, 30));
             buttonsPanel.add(confirmButton, gbc);
-            
+
             //Back button
             gbc.gridx = 2;
             gbc.gridy = 0;
@@ -147,13 +149,18 @@ public class MainMenu extends JFrame {
             this.setVisible(true);
         });
     }
-    
+
     public void pressPlayButtonMenu() {
         this.soundEnable = true;
         GridBagConstraints gbc = new GridBagConstraints();
-        JPanel mainPanel = new JPanel(new BorderLayout());
-        JPanel buttonsPanel = new JPanel (new GridBagLayout());
-        JPanel infoPanel = new JPanel (new GridBagLayout());
+        JLabel mainPanel = new JLabel();
+        mainPanel.setLayout(new BorderLayout());
+        mainPanel.setIcon(new ImageIcon("resources/background.gif"));
+        JPanel buttonsPanel = new JPanel(new GridBagLayout());
+        buttonsPanel.setOpaque(false);
+        JPanel infoPanel = new JPanel(new GridBagLayout());
+        infoPanel.setOpaque(false);
+        JTextField inputUsername = new JTextField();
         JButton backButton = new JButton();
         JButton soundButton = new JButton();
         JButton easyButton = new JButton();
@@ -161,41 +168,102 @@ public class MainMenu extends JFrame {
         JButton hardButton = new JButton();
         JButton simulationButton = new JButton();
         JButton startButton = new JButton();
-        
+
         playButton.addActionListener((ActionEvent event) -> {
-            buttonsPanel.setPreferredSize(new Dimension(700,80));
-            infoPanel.setPreferredSize(new Dimension (700, 620));
-            
+            inputUsername.setText("");
+            buttonsPanel.setPreferredSize(new Dimension(700, 80));
+            infoPanel.setPreferredSize(new Dimension(700, 620));
+
             //////buttonsPanel
             //backbutton
             gbc.gridx = 0;
             gbc.gridy = 0;
-            gbc.insets = new Insets(25,450,25,10);
+            gbc.insets = new Insets(25, 450, 25, 10);
             backButton.setText("BACK");
-            backButton.setPreferredSize(new Dimension(100,30));
-            buttonsPanel.add(backButton,gbc);
-            
+            backButton.setPreferredSize(new Dimension(100, 30));
+            buttonsPanel.add(backButton, gbc);
+
             //soundButton
             gbc.gridx = 1;
-            gbc.insets = new Insets(25,10,25,10);
+            gbc.insets = new Insets(25, 10, 25, 10);
             soundButton.setText("Sound: ON");
-            soundButton.setPreferredSize(new Dimension(100,30));
+            soundButton.setPreferredSize(new Dimension(100, 30));
             buttonsPanel.add(soundButton, gbc);
-            
+
             //////infoPanel
+            //Username title
             JLabel title = new JLabel();
             title.setText("USERNAME");
-            
+            title.setForeground(Color.white);
+            title.setPreferredSize(new Dimension(100, 30));
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            gbc.gridwidth = 3;
+            gbc.insets = new Insets(10, 0, 0, 0);
+            infoPanel.add(title, gbc);
+
+            //Username input
+            inputUsername.setPreferredSize(new Dimension(300, 30));
+            gbc.gridy = 1;
+            gbc.insets = new Insets(0, 0, 0, 0);
+            infoPanel.add(inputUsername, gbc);
+
+            //Difficulty title
+            JLabel difficulty = new JLabel();
+            difficulty.setText("DIFFICULTY");
+            difficulty.setForeground(Color.white);
+            difficulty.setPreferredSize(new Dimension(100, 30));
+            gbc.gridy = 2;
+            gbc.insets = new Insets(50, 0, 0, 0);
+            infoPanel.add(difficulty, gbc);
+
+            //EASY BUTTON
+            easyButton.setText("EASY");
+            easyButton.setPreferredSize(new Dimension(100, 30));
+            gbc.gridy = 3;
+            gbc.gridwidth = 1;
+            gbc.insets = new Insets(0, 0, 0, 0);
+            infoPanel.add(easyButton, gbc);
+
+            //NORMAL BUTTON
+            normalButton.setText("NORMAL");
+            normalButton.setPreferredSize(new Dimension(100, 30));
+            gbc.gridx = 1;
+            gbc.insets = new Insets(0, 0, 0, 0);
+            infoPanel.add(normalButton, gbc);
+
+            //HARD BUTTON
+            hardButton.setText("HARD");
+            hardButton.setPreferredSize(new Dimension(100, 30));
+            gbc.gridx = 2;
+            gbc.insets = new Insets(0, 0, 0, 0);
+            infoPanel.add(hardButton, gbc);
+
+            //START BUTTON
+            startButton.setText("START");
+            startButton.setPreferredSize(new Dimension(100, 30));
+            gbc.gridx = 0;
+            gbc.gridy = 4;
+            gbc.insets = new Insets(100, 0, 100, 0);
+            infoPanel.add(startButton, gbc);
+
+            //SIMULATION BUTTON
+            simulationButton.setText("SIMULATE");
+            simulationButton.setPreferredSize(new Dimension(100, 30));
+            gbc.gridx = 2;
+            gbc.insets = new Insets(100, 0, 100, 0);
+            infoPanel.add(simulationButton, gbc);
+
             mainPanel.add(buttonsPanel, BorderLayout.PAGE_START);
             mainPanel.add(infoPanel, BorderLayout.PAGE_END);
-            
+
             //UPDATE
             this.remove(this.background);
             this.add(mainPanel);
             SwingUtilities.updateComponentTreeUI(this);
             this.setVisible(true);
         });
-        
+
         backButton.addActionListener((ActionEvent event) -> {
             mainPanel.removeAll();
             this.remove(mainPanel);
@@ -203,33 +271,42 @@ public class MainMenu extends JFrame {
             SwingUtilities.updateComponentTreeUI(this);
             this.setVisible(true);
         });
-        
+
         soundButton.addActionListener((ActionEvent event) -> {
-            if(soundEnable){
+            if (soundEnable) {
                 soundEnable = false;
                 soundButton.setText("Sound: OFF");
-            }else{
-                soundEnable =  true;
+            } else {
+                soundEnable = true;
                 soundButton.setText("Sound: ON");
             }
         });
-        
+
         easyButton.addActionListener((ActionEvent event) -> {
             this.mapGraph.setLevel(1);
+            easyButton.setBackground(new Color(204, 204, 204));
+            normalButton.setBackground(new JButton().getBackground());
+            hardButton.setBackground(new JButton().getBackground());
         });
-        
+
         normalButton.addActionListener((ActionEvent event) -> {
             this.mapGraph.setLevel(2);
+            normalButton.setBackground(new Color(204, 204, 204));
+            easyButton.setBackground(new JButton().getBackground());
+            hardButton.setBackground(new JButton().getBackground());
         });
-        
+
         hardButton.addActionListener((ActionEvent event) -> {
             this.mapGraph.setLevel(3);
+            hardButton.setBackground(new Color(204, 204, 204));
+            easyButton.setBackground(new JButton().getBackground());
+            normalButton.setBackground(new JButton().getBackground());
         });
-        
+
         simulationButton.addActionListener((ActionEvent event) -> {
-            
+
         });
-        
+
         startButton.addActionListener((ActionEvent event) -> {
             pressPlayButton();
         });
@@ -298,9 +375,9 @@ public class MainMenu extends JFrame {
             this.setVisible(true);
         });
     }
-    
-    public void showMap(){
-        
+
+    public void showMap() {
+        JLabel map = new JLabel();
     }
 
     public static void main(String[] args) {
