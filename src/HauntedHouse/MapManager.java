@@ -6,7 +6,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 
-public class MapManager {
+public class MapManager implements MapManagerADT {
 
     private final String directory;
     private final File file;
@@ -18,6 +18,13 @@ public class MapManager {
         this.files = this.file.listFiles();
     }
 
+    /**
+     * Method that obtains the names of all the maps in our database. ´
+     *
+     * @return UnorderedList that contains of the name of every map in our
+     * database.
+     */
+    @Override
     public ArrayUnorderedList<String> getMaps() {
         ArrayUnorderedList<String> maps = new ArrayUnorderedList<>();
 
@@ -36,6 +43,7 @@ public class MapManager {
      * @return the graph equivalent of the json file
      * @throws FileNotFoundException if the target map doesnt exist
      */
+    @Override
     public HauntedHouseGraph<String> loadMapFromJSON(String map) throws FileNotFoundException {
         HauntedHouseGraph<String> house = new HauntedHouseGraph<>();
 
