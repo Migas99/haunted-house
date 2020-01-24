@@ -317,15 +317,7 @@ public class MainMenu extends JFrame {
     }
 
     public void pressPlayButton(JLabel map) {
-        JLabel game = new JLabel();
-
-        game.setIcon(new ImageIcon("resources/gengar.gif"));
-
-        //UPDATE
-        this.remove(map);
-        this.add(game);
-        SwingUtilities.updateComponentTreeUI(this);
-        this.setVisible(true);
+        GamePhase game = new GamePhase(this, this.background, this.soundEnable, this.mapGraph, map);
     }
 
     public JLabel showMap(JLabel mainPanel) {
