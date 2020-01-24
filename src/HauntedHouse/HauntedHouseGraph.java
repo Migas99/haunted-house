@@ -4,6 +4,9 @@ import Exceptions.VertexNotFoundException;
 import Graph.WeightDirectedMatrixGraph;
 import LinkedList.ArrayUnorderedList;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implements HauntedHouseGraphADT<T> {
 
@@ -146,7 +149,11 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implement
     public void addNewClassification() {
         if (this.playerName != null) {
             this.classification = new ClassificationManager<>();
-            this.classification.addNewClassification(this.playerName, this.mapName, this.pathTaken, this.healthPoints);
+            try {
+                this.classification.addNewClassification(this.playerName, this.mapName, this.pathTaken, this.healthPoints);
+            } catch (IOException ex) {
+                Logger.getLogger(HauntedHouseGraph.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
@@ -188,6 +195,10 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implement
 
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    public int getLevel() {
+        return this.level;
     }
 
 }

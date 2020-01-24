@@ -68,19 +68,26 @@ public class ClassificationManager<T> implements ClassificationManagerADT<T> {
      */
     @Override
     public String getClassificationTable() throws FileNotFoundException {
-        String classificationTable = "";
-
+        String classificationTable = "--- Classifications Table ---\n";
+                                     
         JsonParser parser = new JsonParser();
         JsonObject object = parser.parse(new FileReader(this.directory)).getAsJsonObject();
-        JsonArray player = object.get("classifications").getAsJsonArray();
-        JsonArray player;
-        JsonArray path;
+        JsonArray players = object.get("classifications").getAsJsonArray();
         
-        for (int i = 0; i < player.size(); i++) {
-            player = player.get(i).getAsJsonArray();
+        JsonObject player;
+        String playerName;
+        String mapName;
+        JsonArray path;
+        String healthPoints;
+
+        for (int i = 0; i < players.size(); i++) {
+            classificationTable = classificationTable + "-----------------------------\n";
+            player = players.get(i).getAsJsonObject();
             
-            for(int j = 0; i<player.size(); i++){
-                
+            //path = player.get(i).getAsJsonArray();
+
+            for (int j = 0; i < player.size(); i++) {
+
             }
         }
 
