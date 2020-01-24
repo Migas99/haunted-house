@@ -1,6 +1,5 @@
 package HauntedHouse;
 
-import Graph.HauntedHouseGraph;
 import LinkedList.ArrayUnorderedList;
 import com.google.gson.*;
 import java.io.File;
@@ -61,19 +60,21 @@ public class MapManager {
          */
         JsonObject room;
         house.addVertex("entrada");
+        house.setStartPosition("entrada");
         for (int i = 0; i < mapa.size(); i++) {
             room = mapa.get(i).getAsJsonObject();
             house.addVertex(room.get("aposento").getAsString());
         }
         house.addVertex("exterior");
+        house.setEndPosition("exterior");
 
         /**
          * Tendo todos os vértices, vamos agora criar as conecções
          */
-        double cost = 0;
         JsonArray connections;
         String aposento;
         String connection;
+        double cost;
 
         /**
          * Percorremos cada um dos vértices

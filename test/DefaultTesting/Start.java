@@ -1,9 +1,10 @@
-package HauntedHouse;
+package DefaultTesting;
 
 import Exceptions.EmptyCollectionException;
 import Exceptions.PathNotFoundException;
 import Exceptions.VertexNotFoundException;
 import Graph.WeightDirectedMatrixGraph;
+import HauntedHouse.MapManager;
 import java.io.FileNotFoundException;
 import java.util.Iterator;
 
