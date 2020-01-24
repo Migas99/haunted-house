@@ -1,5 +1,6 @@
 package HauntedHouse;
 
+import Exceptions.EdgeNotFoundException;
 import Exceptions.VertexNotFoundException;
 import Graph.WeightDirectedMatrixGraph;
 import LinkedList.ArrayUnorderedList;
@@ -29,11 +30,13 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implement
      * Change the position of the playerName to the defined position.
      *
      * @param nextPosition new position of the playerName
-     * @return if the the transaction was a sucess
+     * @return if the new position has a ghost
      * @throws VertexNotFoundException if the vertex target isnt found
+     * @throws EdgeNotFoundException if its impossible to change position to the
+     * given vertex
      */
     @Override
-    public boolean changePosition(T nextPosition) throws VertexNotFoundException {
+    public boolean changePosition(T nextPosition) throws VertexNotFoundException, EdgeNotFoundException {
         int positionIndex = this.getIndex(this.position);
         int nextPositionIndex = this.getIndex(nextPosition);
 
@@ -42,9 +45,9 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implement
                 this.position = nextPosition;
                 this.pathTaken.addToRear(this.position);
                 this.healthPoints = this.healthPoints - this.adjMatrix[positionIndex][nextPositionIndex];
-                return true;
+                return this.adjMatrix[positionIndex][nextPositionIndex] > 0;
             } else {
-                return false;
+                throw new EdgeNotFoundException();
             }
         } else {
             throw new VertexNotFoundException();

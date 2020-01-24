@@ -1,5 +1,6 @@
 package HauntedHouse;
 
+import Exceptions.EdgeNotFoundException;
 import Exceptions.VertexNotFoundException;
 import Graph.WeightGraphADT;
 import LinkedList.ArrayUnorderedList;
@@ -11,10 +12,12 @@ public interface HauntedHouseGraphADT<T> extends WeightGraphADT<T> {
      * Change the position of the player to the defined position.
      *
      * @param nextPosition new position of the player
-     * @return if the the transaction was a sucess
+     * @return if the new position has a ghost
      * @throws VertexNotFoundException if the vertex target isnt found
+     * @throws EdgeNotFoundException if its impossible to change position to the
+     * given vertex
      */
-    public boolean changePosition(T nextPosition) throws VertexNotFoundException;
+    public boolean changePosition(T nextPosition) throws VertexNotFoundException, EdgeNotFoundException;
 
     /**
      * Returns the current position of the player.
@@ -73,7 +76,7 @@ public interface HauntedHouseGraphADT<T> extends WeightGraphADT<T> {
 
     /**
      * Returns the classification table.
-     * 
+     *
      * @return classification table
      * @throws FileNotFoundException if the classifications file is not found
      */
