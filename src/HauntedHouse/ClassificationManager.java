@@ -7,7 +7,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.annotations.Expose;
-import com.google.gson.reflect.TypeToken;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -16,8 +15,7 @@ import java.io.IOException;
 
 public class ClassificationManager<T> implements ClassificationManagerADT<T> {
 
-    private final String directory;
-    private final File classificationsFile;
+    private String directory;
 
     @Expose
     private String playerName;
@@ -30,7 +28,13 @@ public class ClassificationManager<T> implements ClassificationManagerADT<T> {
 
     public ClassificationManager() {
         this.directory = "database/classifications.json";
-        this.classificationsFile = new File(this.directory);
+    }
+
+    public ClassificationManager(String playerName, String mapName, ArrayUnorderedList<T> pathTaken, double healthPoints) {
+        this.playerName = playerName;
+        this.mapName = mapName;
+        this.pathTaken = pathTaken;
+        this.healthPoints = healthPoints;
     }
 
     /**
@@ -45,18 +49,11 @@ public class ClassificationManager<T> implements ClassificationManagerADT<T> {
      */
     @Override
     public void addNewClassification(String playerName, String mapName, ArrayUnorderedList<T> pathTaken, double healthPoints) throws IOException {
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
 
-        ArrayUnorderedList<T> list;
-        JsonParser parser = new JsonParser();
-        Object obj = parser.parse(new FileReader(this.directory));
-        String json = obj.toString();
-        list = new Gson().fromJson(json, new TypeToken<ArrayUnorderedList<T>>() {
-        }.getType());
-
-        FileWriter file = new FileWriter(this.directory);
-        gson.toJson(list, file);
-        file.flush();
+        FileWriter file = new FileWriter(this.directory, true);
+        ClassificationManager classification = new ClassificationManager(playerName, mapName, pathTaken, healthPoints);
+        gson.toJson(this, file);
 
     }
 
@@ -95,24 +92,6 @@ public class ClassificationManager<T> implements ClassificationManagerADT<T> {
         }
 
         return classificationTable;
-    }
-
-    /**
-     * Método responsável por por carregar dados do ficheiro json para um
-     * arrayList
-     *
-     * @param path - path do ficheiro
-     * @throws FileNotFoundException
-     */
-    private ArrayUnorderedList<T> fromFileToList(String path) throws FileNotFoundException {
-        ArrayUnorderedList<T> list;
-        JsonParser parser = new JsonParser();
-        Object obj = parser.parse(new FileReader(path));
-        String json = obj.toString();
-        list = new Gson().fromJson(json, new TypeToken<ArrayUnorderedList<T>>() {
-        }.getType());
-
-        return list;
     }
 
 }
