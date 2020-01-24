@@ -21,13 +21,14 @@ public interface HauntedHouseGraphADT<T> extends WeightGraphADT<T> {
      * @return the current position of the player
      */
     public T getCurrentPosition();
-
+    
     /**
-     *
-     * @param vertex
-     * @return
+     * 
+     * @param vertex actual position of the player
+     * @return list of locations connected to actual position
+     * @throws VertexNotFoundException if the vertex target isnt found
      */
-    public ArrayUnorderedList<T> getAvailableDoors(T vertex);
+    public ArrayUnorderedList<T> getAvailableDoors(T vertex) throws VertexNotFoundException;
 
     /**
      * Checks if the actual position of the player is the outside, wich means
@@ -64,5 +65,4 @@ public interface HauntedHouseGraphADT<T> extends WeightGraphADT<T> {
      * @param vertex where the player ends.
      */
     public void setEndPosition(T vertex);
-
 }

@@ -25,7 +25,7 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implement
         int positionIndex = this.getIndex(this.position);
         int nextPositionIndex = this.getIndex(nextPosition);
 
-        if (this.indexIsValid(positionIndex) && this.indexIsValid(nextPositionIndex)) {
+        if (this.indexIsValid(nextPositionIndex)) {
             if (this.adjMatrix[positionIndex][nextPositionIndex] >= 0) {
                 this.position = nextPosition;
                 this.healthPoints = this.healthPoints - this.adjMatrix[positionIndex][nextPositionIndex];
@@ -49,8 +49,20 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implement
     }
 
     @Override
-    public ArrayUnorderedList<T> getAvailableDoors(T vertex) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public ArrayUnorderedList<T> getAvailableDoors(T vertex) throws VertexNotFoundException{
+        ArrayUnorderedList<T> options = new ArrayUnorderedList<>();
+        int vertexIndex = this.getIndex(vertex);
+        
+        if (this.indexIsValid(vertexIndex)) {
+            for(int i = 0; i<this.adjMatrix.length-1;i++){
+                if(this.adjMatrix[vertexIndex][i] >=0){
+                    options.addToRear(this.vertices[i]);
+                }
+            }
+        }else{
+            throw new VertexNotFoundException("Vertex not found!");
+        }
+        return options;
     }
 
     /**
@@ -136,6 +148,6 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implement
 
     public void setLevel(int level) {
         this.level = level;
+        
     }
-
 }
