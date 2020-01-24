@@ -1,5 +1,6 @@
 package GraphicInterface;
 
+import HauntedHouse.HauntedHouseGraph;
 import HauntedHouse.MapManager;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -19,7 +20,9 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 public class MainMenu extends JFrame {
-
+    
+    HauntedHouseGraph mapGraph = new HauntedHouseGraph();
+     boolean soundEnable =  true;
     MapManager mapManager = new MapManager();
     JButton playButton;
     JButton mapButton;
@@ -92,7 +95,7 @@ public class MainMenu extends JFrame {
         mapButton.addActionListener((ActionEvent event) -> {
             map.setIcon(null);
             buttonsPanel.setPreferredSize(new Dimension(700, 80));
-            map.setPreferredSize(new Dimension(700, 625));
+            map.setPreferredSize(new Dimension(700, 620));
 
             //MapsList
             gbc.gridx = 0;
@@ -113,7 +116,7 @@ public class MainMenu extends JFrame {
             confirmButton.setText("Confirm");
             confirmButton.setPreferredSize(new Dimension(100, 30));
             buttonsPanel.add(confirmButton, gbc);
-
+            
             //Back button
             gbc.gridx = 2;
             gbc.gridy = 0;
@@ -144,68 +147,91 @@ public class MainMenu extends JFrame {
             this.setVisible(true);
         });
     }
-
+    
     public void pressPlayButtonMenu() {
+        this.soundEnable = true;
         GridBagConstraints gbc = new GridBagConstraints();
         JPanel mainPanel = new JPanel(new BorderLayout());
-        JPanel buttonsPanel = new JPanel(new GridBagLayout());
-        JLabel map = new JLabel();
-        JComboBox mapsList = new JComboBox();
+        JPanel buttonsPanel = new JPanel (new GridBagLayout());
+        JPanel infoPanel = new JPanel (new GridBagLayout());
         JButton backButton = new JButton();
-        JButton confirmButton = new JButton();
+        JButton soundButton = new JButton();
+        JButton easyButton = new JButton();
+        JButton normalButton = new JButton();
+        JButton hardButton = new JButton();
+        JButton simulationButton = new JButton();
+        JButton startButton = new JButton();
+        
         playButton.addActionListener((ActionEvent event) -> {
-            map.setIcon(null);
-            buttonsPanel.setPreferredSize(new Dimension(700, 80));
-            map.setPreferredSize(new Dimension(700, 625));
-
-            //MapsList
+            buttonsPanel.setPreferredSize(new Dimension(700,80));
+            infoPanel.setPreferredSize(new Dimension (700, 620));
+            
+            //////buttonsPanel
+            //backbutton
             gbc.gridx = 0;
             gbc.gridy = 0;
-            gbc.insets = new Insets(25, 15, 25, 0);
-            mapsList.setPreferredSize(new Dimension(150, 30));
-            Iterator iterator = mapManager.getMaps().iterator();
-            while (iterator.hasNext()) {
-                mapsList.addItem(iterator.next());
-            }
-            mapsList.setSelectedItem(null);
-            buttonsPanel.add(mapsList, gbc);
-
-            //Confirm button
+            gbc.insets = new Insets(25,450,25,10);
+            backButton.setText("BACK");
+            backButton.setPreferredSize(new Dimension(100,30));
+            buttonsPanel.add(backButton,gbc);
+            
+            //soundButton
             gbc.gridx = 1;
-            gbc.gridy = 0;
-            gbc.insets = new Insets(25, 0, 25, 300);
-            confirmButton.setText("Confirm");
-            confirmButton.setPreferredSize(new Dimension(100, 30));
-            buttonsPanel.add(confirmButton, gbc);
-
-            //Back button
-            gbc.gridx = 2;
-            gbc.gridy = 0;
-            gbc.insets = new Insets(25, 0, 25, 15);
-            backButton.setText("Back");
-            backButton.setPreferredSize(new Dimension(100, 30));
-            buttonsPanel.add(backButton, gbc);
-
+            gbc.insets = new Insets(25,10,25,10);
+            soundButton.setText("Sound: ON");
+            soundButton.setPreferredSize(new Dimension(100,30));
+            buttonsPanel.add(soundButton, gbc);
+            
+            //////infoPanel
+            JLabel title = new JLabel();
+            title.setText("USERNAME");
+            
             mainPanel.add(buttonsPanel, BorderLayout.PAGE_START);
-            mainPanel.add(map, BorderLayout.PAGE_END);
-
+            mainPanel.add(infoPanel, BorderLayout.PAGE_END);
+            
             //UPDATE
             this.remove(this.background);
             this.add(mainPanel);
             SwingUtilities.updateComponentTreeUI(this);
             this.setVisible(true);
         });
-
-        confirmButton.addActionListener((ActionEvent event) -> {
-            map.setIcon(new ImageIcon("resources/giratina.gif"));
-        });
-
+        
         backButton.addActionListener((ActionEvent event) -> {
             mainPanel.removeAll();
             this.remove(mainPanel);
             this.add(this.background);
             SwingUtilities.updateComponentTreeUI(this);
             this.setVisible(true);
+        });
+        
+        soundButton.addActionListener((ActionEvent event) -> {
+            if(soundEnable){
+                soundEnable = false;
+                soundButton.setText("Sound: OFF");
+            }else{
+                soundEnable =  true;
+                soundButton.setText("Sound: ON");
+            }
+        });
+        
+        easyButton.addActionListener((ActionEvent event) -> {
+            this.mapGraph.setLevel(1);
+        });
+        
+        normalButton.addActionListener((ActionEvent event) -> {
+            this.mapGraph.setLevel(2);
+        });
+        
+        hardButton.addActionListener((ActionEvent event) -> {
+            this.mapGraph.setLevel(3);
+        });
+        
+        simulationButton.addActionListener((ActionEvent event) -> {
+            
+        });
+        
+        startButton.addActionListener((ActionEvent event) -> {
+            pressPlayButton();
         });
     }
 
@@ -271,7 +297,9 @@ public class MainMenu extends JFrame {
             SwingUtilities.updateComponentTreeUI(this);
             this.setVisible(true);
         });
-
+    }
+    
+    public void showMap(){
         
     }
 
