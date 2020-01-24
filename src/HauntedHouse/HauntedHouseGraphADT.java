@@ -21,9 +21,9 @@ public interface HauntedHouseGraphADT<T> extends WeightGraphADT<T> {
      * @return the current position of the player
      */
     public T getCurrentPosition();
-    
+
     /**
-     * 
+     *
      * @param vertex actual position of the player
      * @return list of locations connected to actual position
      * @throws VertexNotFoundException if the vertex target isnt found
@@ -65,4 +65,16 @@ public interface HauntedHouseGraphADT<T> extends WeightGraphADT<T> {
      * @param vertex where the player ends.
      */
     public void setEndPosition(T vertex);
+
+    /**
+     *
+     */
+    public void addNewClassification();
+
+    /**
+     *
+     * @return
+     */
+    public String getClassificationTable();
+
 }
