@@ -11,6 +11,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -308,79 +310,58 @@ public class MainMenu extends JFrame {
         });
 
         startButton.addActionListener((ActionEvent event) -> {
-            pressPlayButton();
+            JLabel map = this.showMap(mainPanel);
+            Thread wait = new Thread(new Wait(map));
+            wait.start();
         });
     }
 
-    public void pressPlayButton() {
-        GridBagConstraints gbc = new GridBagConstraints();
-        JPanel mainPanel = new JPanel(new BorderLayout());
-        JPanel buttonsPanel = new JPanel(new GridBagLayout());
-        JLabel map = new JLabel();
-        JComboBox mapsList = new JComboBox();
-        JButton backButton = new JButton();
-        JButton confirmButton = new JButton();
-        mapButton.addActionListener((ActionEvent event) -> {
-            map.setIcon(null);
-            buttonsPanel.setPreferredSize(new Dimension(700, 80));
-            map.setPreferredSize(new Dimension(700, 625));
+    public void pressPlayButton(JLabel map) {
+        JLabel game = new JLabel();
 
-            //MapsList
-            gbc.gridx = 0;
-            gbc.gridy = 0;
-            gbc.insets = new Insets(25, 15, 25, 0);
-            mapsList.setPreferredSize(new Dimension(150, 30));
-            Iterator iterator = mapManager.getMaps().iterator();
-            while (iterator.hasNext()) {
-                mapsList.addItem(iterator.next());
-            }
-            mapsList.setSelectedItem(null);
-            buttonsPanel.add(mapsList, gbc);
+        game.setIcon(new ImageIcon("resources/gengar.gif"));
 
-            //Confirm button
-            gbc.gridx = 1;
-            gbc.gridy = 0;
-            gbc.insets = new Insets(25, 0, 25, 300);
-            confirmButton.setText("Confirm");
-            confirmButton.setPreferredSize(new Dimension(100, 30));
-            buttonsPanel.add(confirmButton, gbc);
-
-            //Back button
-            gbc.gridx = 2;
-            gbc.gridy = 0;
-            gbc.insets = new Insets(25, 0, 25, 15);
-            backButton.setText("Back");
-            backButton.setPreferredSize(new Dimension(100, 30));
-            buttonsPanel.add(backButton, gbc);
-
-            mainPanel.add(buttonsPanel, BorderLayout.PAGE_START);
-            mainPanel.add(map, BorderLayout.PAGE_END);
-
-            //UPDATE
-            this.remove(this.background);
-            this.add(mainPanel);
-            SwingUtilities.updateComponentTreeUI(this);
-            this.setVisible(true);
-        });
-
-        confirmButton.addActionListener((ActionEvent event) -> {
-            map.setIcon(new ImageIcon("resources/giratina.gif"));
-        });
-
-        backButton.addActionListener((ActionEvent event) -> {
-            mainPanel.removeAll();
-            this.remove(mainPanel);
-            this.add(this.background);
-            SwingUtilities.updateComponentTreeUI(this);
-            this.setVisible(true);
-        });
+        //UPDATE
+        this.remove(map);
+        this.add(game);
+        SwingUtilities.updateComponentTreeUI(this);
+        this.setVisible(true);
     }
 
-    public void showMap() {
+    public JLabel showMap(JLabel mainPanel) {
         JLabel map = new JLabel();
+        map.setIcon(new ImageIcon("resources/giratina.gif"));
+
+        //UPDATE
+        this.remove(mainPanel);
+        this.add(map);
+        SwingUtilities.updateComponentTreeUI(this);
+        this.setVisible(true);
+
+        return map;
     }
 
     public static void main(String[] args) {
         MainMenu menu = new MainMenu();
+    }
+
+    public class Wait implements Runnable {
+
+        private JLabel label;
+
+        public Wait(JLabel label) {
+            this.label = label;
+        }
+
+        @Override
+        public void run() {
+            try {
+                Thread.sleep(5000);
+                pressPlayButton(this.label);
+            } catch (InterruptedException e) {
+                System.out.println("InterruptedException!");
+            }
+        }
+
     }
 }
