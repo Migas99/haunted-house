@@ -13,8 +13,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -395,8 +393,12 @@ public class MainMenu extends JFrame {
 
     public class Wait implements Runnable {
 
+<<<<<<< HEAD
         private JLabel label;
         private int time;
+=======
+        private final JLabel label;
+>>>>>>> master
 
         public Wait(JLabel label, int time) {
             this.label = label;
