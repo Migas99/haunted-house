@@ -392,14 +392,8 @@ public class MainMenu extends JFrame {
     }
 
     public class Wait implements Runnable {
-
-<<<<<<< HEAD
         private JLabel label;
         private int time;
-=======
-        private final JLabel label;
->>>>>>> master
-
         public Wait(JLabel label, int time) {
             this.label = label;
             this.time = time;
