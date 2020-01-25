@@ -10,6 +10,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,13 +27,14 @@ import javax.swing.SwingUtilities;
 
 public class MainMenu extends JFrame {
 
-    HauntedHouseGraph mapGraph = new HauntedHouseGraph();
+    HauntedHouseGraph mapGraph;
     boolean soundEnable = true;
     MapManager mapManager = new MapManager();
     JButton playButton;
     JButton mapButton;
     JComboBox settings;
     JLabel background = new JLabel();
+    int level;
 
     public MainMenu() {
         super("HauntedHouse");
@@ -98,6 +101,7 @@ public class MainMenu extends JFrame {
         JButton confirmButton = new JButton();
         mapButton.addActionListener((ActionEvent event) -> {
             map.setIcon(null);
+            mapsList.removeAllItems();
             buttonsPanel.setPreferredSize(new Dimension(700, 80));
             map.setPreferredSize(new Dimension(700, 620));
 
@@ -157,6 +161,7 @@ public class MainMenu extends JFrame {
         GridBagConstraints gbc = new GridBagConstraints();
         JLabel mainPanel = new JLabel();
         mainPanel.setLayout(new BorderLayout());
+        JComboBox mapsList = new JComboBox();
         mainPanel.setIcon(new ImageIcon("resources/background.gif"));
         JPanel buttonsPanel = new JPanel(new GridBagLayout());
         buttonsPanel.setOpaque(false);
@@ -173,8 +178,14 @@ public class MainMenu extends JFrame {
 
         playButton.addActionListener((ActionEvent event) -> {
             inputUsername.setText("");
+            this.mapGraph = null;
+            mapsList.removeAllItems();
+            mapsList.setSelectedItem(null);
             buttonsPanel.setPreferredSize(new Dimension(700, 80));
             infoPanel.setPreferredSize(new Dimension(700, 620));
+
+            //DEFAULT DIFFICULTY
+            normalButton.doClick();
 
             //////buttonsPanel
             //backbutton
@@ -189,6 +200,7 @@ public class MainMenu extends JFrame {
             gbc.gridx = 1;
             gbc.insets = new Insets(25, 10, 25, 10);
             soundButton.setText("Sound: ON");
+            this.soundEnable = true;
             soundButton.setPreferredSize(new Dimension(100, 30));
             buttonsPanel.add(soundButton, gbc);
 
@@ -210,19 +222,41 @@ public class MainMenu extends JFrame {
             gbc.insets = new Insets(0, 0, 0, 0);
             infoPanel.add(inputUsername, gbc);
 
+            //MAP
+            JLabel map = new JLabel();
+            map.setText("SELECT MAP");
+            map.setForeground(Color.white);
+            map.setPreferredSize(new Dimension(100, 30));
+            gbc.gridx = 0;
+            gbc.gridy = 2;
+            gbc.gridwidth = 3;
+            gbc.insets = new Insets(50, 0, 0, 0);
+            infoPanel.add(map, gbc);
+            //MapsList
+            gbc.gridx = 0;
+            gbc.gridy = 3;
+            gbc.insets = new Insets(0, 0, 0, 0);
+            mapsList.setPreferredSize(new Dimension(300, 30));
+            Iterator iterator = mapManager.getMaps().iterator();
+            while (iterator.hasNext()) {
+                mapsList.addItem(iterator.next());
+            }
+            mapsList.setSelectedItem(null);
+            infoPanel.add(mapsList, gbc);
+
             //Difficulty title
             JLabel difficulty = new JLabel();
             difficulty.setText("DIFFICULTY");
             difficulty.setForeground(Color.white);
             difficulty.setPreferredSize(new Dimension(100, 30));
-            gbc.gridy = 2;
+            gbc.gridy = 4;
             gbc.insets = new Insets(50, 0, 0, 0);
             infoPanel.add(difficulty, gbc);
 
             //EASY BUTTON
             easyButton.setText("EASY");
             easyButton.setPreferredSize(new Dimension(100, 30));
-            gbc.gridy = 3;
+            gbc.gridy = 5;
             gbc.gridwidth = 1;
             gbc.insets = new Insets(0, 0, 0, 0);
             infoPanel.add(easyButton, gbc);
@@ -245,7 +279,7 @@ public class MainMenu extends JFrame {
             startButton.setText("START");
             startButton.setPreferredSize(new Dimension(100, 30));
             gbc.gridx = 0;
-            gbc.gridy = 4;
+            gbc.gridy = 6;
             gbc.insets = new Insets(100, 0, 100, 0);
             infoPanel.add(startButton, gbc);
 
@@ -285,21 +319,21 @@ public class MainMenu extends JFrame {
         });
 
         easyButton.addActionListener((ActionEvent event) -> {
-            this.mapGraph.setLevel(1);
+            this.setLevel(1);
             easyButton.setBackground(new Color(204, 204, 204));
             normalButton.setBackground(new JButton().getBackground());
             hardButton.setBackground(new JButton().getBackground());
         });
 
         normalButton.addActionListener((ActionEvent event) -> {
-            this.mapGraph.setLevel(2);
+            this.setLevel(2);
             normalButton.setBackground(new Color(204, 204, 204));
             easyButton.setBackground(new JButton().getBackground());
             hardButton.setBackground(new JButton().getBackground());
         });
 
         hardButton.addActionListener((ActionEvent event) -> {
-            this.mapGraph.setLevel(3);
+            this.setLevel(3);
             hardButton.setBackground(new Color(204, 204, 204));
             easyButton.setBackground(new JButton().getBackground());
             normalButton.setBackground(new JButton().getBackground());
@@ -310,10 +344,32 @@ public class MainMenu extends JFrame {
         });
 
         startButton.addActionListener((ActionEvent event) -> {
-            JLabel map = this.showMap(mainPanel);
-            Thread wait = new Thread(new Wait(map));
-            wait.start();
+            if (mapsList.getSelectedItem() != null && inputUsername.getText() != null) {
+                try {
+                    this.mapGraph = this.mapManager.loadMapFromJSON((String) mapsList.getSelectedItem());
+                    this.mapGraph.setLevel(this.level);
+                    this.mapGraph.setPlayerName(inputUsername.getText());
+                    this.mapGraph.setDifficulty();
+                } catch (FileNotFoundException ex) {
+                }
+                JLabel map = null;
+                 Thread wait = null;
+                if (this.level == 1) {
+                    map = this.showMap(mainPanel);
+                    wait = new Thread(new Wait(map, 5000));
+                } else if (this.level == 2){
+                    map = this.showMap(mainPanel);
+                    wait = new Thread(new Wait(map, 1000));
+                } else if (this.level == 3){
+                    wait = new Thread(new Wait(mainPanel, 0));
+                }
+                wait.start();
+            }
         });
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 
     public void pressPlayButton(JLabel map) {
@@ -340,15 +396,17 @@ public class MainMenu extends JFrame {
     public class Wait implements Runnable {
 
         private JLabel label;
+        private int time;
 
-        public Wait(JLabel label) {
+        public Wait(JLabel label, int time) {
             this.label = label;
+            this.time = time;
         }
 
         @Override
         public void run() {
             try {
-                Thread.sleep(5000);
+                Thread.sleep(time);
                 pressPlayButton(this.label);
             } catch (InterruptedException e) {
                 System.out.println("InterruptedException!");

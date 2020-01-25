@@ -1,5 +1,6 @@
 package GraphicInterface;
 
+import Exceptions.EdgeNotFoundException;
 import Exceptions.VertexNotFoundException;
 import HauntedHouse.HauntedHouseGraph;
 import LinkedList.ArrayUnorderedList;
@@ -12,6 +13,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sound.sampled.AudioInputStream;
@@ -43,15 +45,20 @@ public class GamePhase extends JLabel {
         this.sound = sound;
         this.mapGraph = mapGraph;
         this.previous = previous;
+        this.ghost = new JLabel();
+        this.portas = new ArrayUnorderedList();
 
         this.setLayout(new BorderLayout());
 
-        roomScreen();
+        try {
+            roomScreen();
+        } catch (VertexNotFoundException e) {
+        }
     }
 
-    public void roomScreen() {
+    public void roomScreen() throws VertexNotFoundException {
         GridBagConstraints gbc = new GridBagConstraints();
-        JPanel top = new JPanel();
+        JPanel top = new JPanel(new GridBagLayout());
         JPanel center = new JPanel();
         JPanel bottom = new JPanel(new GridBagLayout());
         JButton giveUp = new JButton();
@@ -65,10 +72,19 @@ public class GamePhase extends JLabel {
         //bottom.setOpaque(false);
         bottom.setBackground(Color.blue);
 
-        //TOP
+        //////TOP
+        //Health Bar
+        //GiveUp
         giveUp.setText("GIVE UP");
-        giveUp.setPreferredSize(new Dimension(200, 50));
-        top.add(giveUp);
+        giveUp.setPreferredSize(new Dimension(100, 30));
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.insets = new Insets(10, 0, 60, 10);
+        top.add(giveUp, gbc);
+
+        //////CENTER
+        //////BOTTOM
+        this.setPortas(bottom);
 
         this.add(top, BorderLayout.PAGE_START);
         this.add(center, BorderLayout.CENTER);
@@ -92,11 +108,11 @@ public class GamePhase extends JLabel {
         this.frame.setVisible(true);
 
         giveUp.addActionListener((ActionEvent event) -> {
-            giveUpScreen(this);
+            giveUpScreen();
         });
     }
 
-    public void giveUpScreen(JLabel label) {
+    public void giveUpScreen() {
         GridBagConstraints gbc = new GridBagConstraints();
         JLabel giveUpLabel = new JLabel();
         giveUpLabel.setLayout(new GridBagLayout());
@@ -109,7 +125,7 @@ public class GamePhase extends JLabel {
         giveUpLabel.add(backButton, gbc);
 
         //UPDATE
-        this.frame.remove(label);
+        this.frame.remove(this);
         this.frame.add(giveUpLabel);
         SwingUtilities.updateComponentTreeUI(this.frame);
         this.frame.setVisible(true);
@@ -134,7 +150,7 @@ public class GamePhase extends JLabel {
         JLabel wastedImg = new JLabel();
         JButton backButton = new JButton();
 
-        wastedImg.setIcon(new ImageIcon("resources/wasted.gif"));
+        wastedImg.setIcon(new ImageIcon("resources/wasted.png"));
         wastedImg.setPreferredSize(new Dimension(400, 400));
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -148,6 +164,9 @@ public class GamePhase extends JLabel {
         deadLabel.add(backButton, gbc);
 
         if (this.sound) {
+            this.backgroundSound.stop();
+            this.backgroundSound.flush();
+            this.backgroundSound.close();
             this.deadSound().start();
         }
         //UPDATE
@@ -198,10 +217,46 @@ public class GamePhase extends JLabel {
         return portas;
     }
 
-    public void setPortas() throws VertexNotFoundException {
-        int numPortas = this.mapGraph.getAvailableDoors(this.mapGraph.getCurrentPosition()).size();
-        for (int i = 0; i < numPortas - 1; i++) {
-            this.portas.addToRear(new JButton());
+    public void setPortas(JPanel label) throws VertexNotFoundException {
+        GridBagConstraints gbc = new GridBagConstraints();
+        Iterator iterator = this.mapGraph.getAvailableDoors(this.mapGraph.getCurrentPosition()).iterator();
+        JButton porta;
+        int i = 0;
+        while (iterator.hasNext()) {
+            String stringPorta = (String) iterator.next();
+            System.out.println(stringPorta);
+
+            porta = new JButton();
+            porta.setText(stringPorta);
+            this.portas.addToRear(porta);
+
+            porta.setPreferredSize(new Dimension(100, 200));
+            gbc.gridx = i;
+            gbc.gridy = 0;
+            gbc.insets = new Insets(0, 5, 0, 5);
+            label.add(porta, gbc);
+            i++;
+
+            porta.addActionListener((ActionEvent event) -> {
+                try {
+                    GamePhase game;
+                    this.mapGraph.changePosition(stringPorta);
+                    if (this.mapGraph.isComplete()) {
+                        this.giveUpScreen();
+                    } else if (!this.mapGraph.isAlive()) {
+                        this.deadScreen();
+                    } else {
+                        System.out.println("atual: " + this.mapGraph.getCurrentPosition());
+                        if (this.sound) {
+                            backgroundSound.stop();
+                            backgroundSound.flush();
+                            backgroundSound.close();
+                        }
+                        game = new GamePhase(this.frame, this.mainPanel, this.sound, this.mapGraph, this);
+                    }
+                } catch (VertexNotFoundException | EdgeNotFoundException ex) {
+                }
+            });
         }
     }
 
@@ -236,5 +291,4 @@ public class GamePhase extends JLabel {
             this.ghost.setIcon(new ImageIcon("resources/giratina.gif"));
         }
     }
-
 }
