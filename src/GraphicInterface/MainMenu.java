@@ -10,7 +10,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -389,7 +388,7 @@ public class MainMenu extends JFrame {
             } catch (IOException ex) {
             }
         }
-        GamePhase game = new GamePhase(this, this.background, this.soundEnable, this.mapGraph, map, backgroundSound);
+        GamePhase game = new GamePhase(this, this.background, this.soundEnable, this.mapGraph, map, backgroundSound, false);
     }
     
     public AudioInputStream backgroundSound() {

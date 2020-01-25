@@ -37,8 +37,9 @@ public class GamePhase extends JLabel {
     private JLabel previous;
     private Clip backgroundSound;
     private Clip deadSound;
+    private boolean checkGhost;
 
-    public GamePhase(JFrame frame, JLabel mainPanel, boolean sound, HauntedHouseGraph mapGraph, JLabel previous, Clip backgroundSound) {
+    public GamePhase(JFrame frame, JLabel mainPanel, boolean sound, HauntedHouseGraph mapGraph, JLabel previous, Clip backgroundSound, boolean checkGhost) {
         this.frame = frame;
         this.mainPanel = mainPanel;
         this.sound = sound;
@@ -47,6 +48,7 @@ public class GamePhase extends JLabel {
         this.ghost = new JLabel();
         this.portas = new ArrayUnorderedList();
         this.backgroundSound = backgroundSound;
+        this.checkGhost = checkGhost;
 
         this.setLayout(new BorderLayout());
 
@@ -83,6 +85,11 @@ public class GamePhase extends JLabel {
         top.add(giveUp, gbc);
 
         //////CENTER
+        if(this.checkGhost){
+            this.setGhost();
+        }
+        center.add(this.ghost, JLabel.CENTER);
+        
         //////BOTTOM
         this.setPortas(bottom);
 
@@ -102,6 +109,37 @@ public class GamePhase extends JLabel {
     }
 
     public void giveUpScreen() {
+        GridBagConstraints gbc = new GridBagConstraints();
+        JLabel giveUpLabel = new JLabel();
+        giveUpLabel.setLayout(new GridBagLayout());
+        JButton backButton = new JButton();
+
+        backButton.setText("BACK");
+        backButton.setPreferredSize(new Dimension(200, 50));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        giveUpLabel.add(backButton, gbc);
+
+        //UPDATE
+        this.frame.remove(this);
+        this.frame.add(giveUpLabel);
+        SwingUtilities.updateComponentTreeUI(this.frame);
+        this.frame.setVisible(true);
+        backButton.addActionListener((ActionEvent event) -> {
+            //UPDATE
+            if (this.sound) {
+                backgroundSound.stop();
+                backgroundSound.flush();
+                backgroundSound.close();
+            }
+            this.frame.remove(giveUpLabel);
+            this.frame.add(this.mainPanel);
+            SwingUtilities.updateComponentTreeUI(this.frame);
+            this.frame.setVisible(true);
+        });
+    }
+
+    public void winScreen() {
         GridBagConstraints gbc = new GridBagConstraints();
         JLabel giveUpLabel = new JLabel();
         giveUpLabel.setLayout(new GridBagLayout());
@@ -184,8 +222,6 @@ public class GamePhase extends JLabel {
         });
     }
 
-    
-
     public AudioInputStream deadSound() {
         AudioInputStream audioinputstream = null;
         try {
@@ -223,14 +259,17 @@ public class GamePhase extends JLabel {
             porta.addActionListener((ActionEvent event) -> {
                 try {
                     GamePhase game;
-                    this.mapGraph.changePosition(stringPorta);
+                    boolean checkG = false;
+                    if (this.mapGraph.changePosition(stringPorta)) {
+                        checkG = true;
+                    }
                     if (this.mapGraph.isComplete()) {
                         this.giveUpScreen();
                     } else if (!this.mapGraph.isAlive()) {
                         this.deadScreen();
                     } else {
                         System.out.println("atual: " + this.mapGraph.getCurrentPosition());
-                        game = new GamePhase(this.frame, this.mainPanel, this.sound, this.mapGraph, this, this.backgroundSound);
+                        game = new GamePhase(this.frame, this.mainPanel, this.sound, this.mapGraph, this, this.backgroundSound, checkG);
                     }
                 } catch (VertexNotFoundException | EdgeNotFoundException ex) {
                 }
