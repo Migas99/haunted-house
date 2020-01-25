@@ -11,8 +11,15 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Iterator;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -371,7 +378,28 @@ public class MainMenu extends JFrame {
     }
 
     public void pressPlayButton(JLabel map) {
-        GamePhase game = new GamePhase(this, this.background, this.soundEnable, this.mapGraph, map);
+        Clip backgroundSound = null;
+        if (this.soundEnable) {
+            try {
+                backgroundSound = AudioSystem.getClip();
+                backgroundSound.open(this.backgroundSound());
+                backgroundSound.start();
+                backgroundSound.loop(backgroundSound.LOOP_CONTINUOUSLY);
+            } catch (LineUnavailableException ex) {
+            } catch (IOException ex) {
+            }
+        }
+        GamePhase game = new GamePhase(this, this.background, this.soundEnable, this.mapGraph, map, backgroundSound);
+    }
+    
+    public AudioInputStream backgroundSound() {
+        AudioInputStream audioinputstream = null;
+        try {
+            File soundFile = new File("resources/background.wav");
+            audioinputstream = AudioSystem.getAudioInputStream(soundFile);
+        } catch (UnsupportedAudioFileException | IOException e) {
+        }
+        return audioinputstream;
     }
 
     public JLabel showMap(JLabel mainPanel) {

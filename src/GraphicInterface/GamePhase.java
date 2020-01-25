@@ -38,8 +38,9 @@ public class GamePhase extends JLabel {
     private JLabel ghost;
     private JLabel previous;
     private Clip backgroundSound;
+    private Clip deadSound;
 
-    public GamePhase(JFrame frame, JLabel mainPanel, boolean sound, HauntedHouseGraph mapGraph, JLabel previous) {
+    public GamePhase(JFrame frame, JLabel mainPanel, boolean sound, HauntedHouseGraph mapGraph, JLabel previous, Clip backgroundSound) {
         this.frame = frame;
         this.mainPanel = mainPanel;
         this.sound = sound;
@@ -47,6 +48,7 @@ public class GamePhase extends JLabel {
         this.previous = previous;
         this.ghost = new JLabel();
         this.portas = new ArrayUnorderedList();
+        this.backgroundSound = backgroundSound;
 
         this.setLayout(new BorderLayout());
 
@@ -89,17 +91,6 @@ public class GamePhase extends JLabel {
         this.add(top, BorderLayout.PAGE_START);
         this.add(center, BorderLayout.CENTER);
         this.add(bottom, BorderLayout.PAGE_END);
-
-        if (this.sound) {
-            try {
-                backgroundSound = AudioSystem.getClip();
-                backgroundSound.open(this.backgroundSound());
-                backgroundSound.start();
-                backgroundSound.loop(backgroundSound.LOOP_CONTINUOUSLY);
-            } catch (LineUnavailableException ex) {
-            } catch (IOException ex) {
-            }
-        }
 
         //UPDATE
         this.frame.remove(this.previous);
@@ -167,7 +158,13 @@ public class GamePhase extends JLabel {
             this.backgroundSound.stop();
             this.backgroundSound.flush();
             this.backgroundSound.close();
-            this.deadSound().start();
+            try {
+                this.deadSound = AudioSystem.getClip();
+                this.deadSound.open(this.deadSound());
+                this.deadSound.start();
+            } catch (LineUnavailableException ex) {
+            } catch (IOException ex) {
+            }
         }
         //UPDATE
         this.frame.remove(this);
@@ -178,7 +175,9 @@ public class GamePhase extends JLabel {
         backButton.addActionListener((ActionEvent event) -> {
             //UPDATE
             if (this.sound) {
-                this.deadSound().stop();
+                this.deadSound.stop();
+                this.deadSound.flush();
+                this.deadSound.close();
             }
             this.frame.remove(deadLabel);
             this.frame.add(this.mainPanel);
@@ -187,30 +186,16 @@ public class GamePhase extends JLabel {
         });
     }
 
-    public AudioInputStream backgroundSound() {
+    
+
+    public AudioInputStream deadSound() {
         AudioInputStream audioinputstream = null;
         try {
-            File soundFile = new File("resources/background.wav");
+            File soundFile = new File("resources/wasted.wav");
             audioinputstream = AudioSystem.getAudioInputStream(soundFile);
         } catch (UnsupportedAudioFileException | IOException e) {
         }
         return audioinputstream;
-    }
-
-    public Clip deadSound() {
-        Clip clip = null;
-        try {
-            File soundFile = new File("resources/wasted.wav");
-            AudioInputStream audioinputstream = AudioSystem.getAudioInputStream(soundFile);
-            try {
-                clip = AudioSystem.getClip();
-                clip.open(audioinputstream);
-            } catch (LineUnavailableException e) {
-            }
-        } catch (UnsupportedAudioFileException | IOException e) {
-        }
-
-        return clip;
     }
 
     public ArrayUnorderedList<JButton> getPortas() {
