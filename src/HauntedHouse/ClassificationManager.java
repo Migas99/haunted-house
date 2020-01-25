@@ -53,7 +53,7 @@ public class ClassificationManager<T> implements ClassificationManagerADT<T> {
 
         FileWriter file = new FileWriter(this.directory, true);
         ClassificationManager classification = new ClassificationManager(playerName, mapName, pathTaken, healthPoints);
-        gson.toJson(this, file);
+        gson.toJson(classification, file);
 
     }
 
