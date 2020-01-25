@@ -14,8 +14,6 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -232,12 +230,7 @@ public class GamePhase extends JLabel {
                         this.deadScreen();
                     } else {
                         System.out.println("atual: " + this.mapGraph.getCurrentPosition());
-                        if (this.sound) {
-                            backgroundSound.stop();
-                            backgroundSound.flush();
-                            backgroundSound.close();
-                        }
-                        game = new GamePhase(this.frame, this.mainPanel, this.sound, this.mapGraph, this);
+                        game = new GamePhase(this.frame, this.mainPanel, this.sound, this.mapGraph, this, this.backgroundSound);
                     }
                 } catch (VertexNotFoundException | EdgeNotFoundException ex) {
                 }
