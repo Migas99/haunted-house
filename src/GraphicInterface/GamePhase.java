@@ -146,11 +146,20 @@ public class GamePhase extends JLabel {
         winLabel.setIcon(new ImageIcon("resources/win.gif"));
         JButton backButton = new JButton();
 
-        backButton.setText("BACK");
-        backButton.setPreferredSize(new Dimension(200, 50));
+        JLabel text = new JLabel();
+        text.setPreferredSize(new Dimension(200,100));
+        text.setText("Congratulations " + this.mapGraph.getPlayerName() + "<br>"
+                + "you didn't died</html>");
+        text.setForeground(Color.white);
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.insets = new Insets(550,0,0,0);
+        gbc.insets = new Insets(550, 0, 0, 0);
+        winLabel.add(text, gbc);
+
+        backButton.setText("BACK");
+        backButton.setPreferredSize(new Dimension(200, 50));
+        gbc.gridy = 1;
+        gbc.insets = new Insets(300, 0, 0, 0);
         winLabel.add(backButton, gbc);
 
         //UPDATE
