@@ -82,14 +82,14 @@ public class MapManager implements MapManagerADT {
         JsonArray connections;
         String aposento;
         String connection;
-        double cost;
+        String nextAposento;
+        double cost = 0;
 
         /**
          * Percorremos cada um dos vértices
          */
         for (int i = 0; i < mapa.size(); i++) {
             room = mapa.get(i).getAsJsonObject();
-            cost = room.get("fantasma").getAsDouble();
             aposento = room.get("aposento").getAsString();
             connections = room.get("ligacoes").getAsJsonArray();
 
@@ -106,7 +106,33 @@ public class MapManager implements MapManagerADT {
                 if (connection.equals("entrada")) {
                     house.addEdge(connection, aposento, 0);
                 } else {
-                    house.addEdge(aposento, connection, cost);
+                    /**
+                     * Se a connection for "exterior", significa que não terá
+                     * custo
+                     */
+                    if (connection.equals("exterior")) {
+                        house.addEdge(aposento, connection, 0);
+                    } else {
+
+                        /**
+                         * Vamos buscar então se a próxima secção tem um
+                         * fantasma, para definir o custo do atual vértice para
+                         * o próximo
+                         */
+                        boolean found = false;
+                        for (int k = 0; k < mapa.size() && !found; k++) {
+                            room = mapa.get(k).getAsJsonObject();
+                            if (connection.equals(room.get("aposento").getAsString())) {
+                                found = true;
+                                cost = room.get("fantasma").getAsDouble();
+                            }
+                        }
+
+                        if (found) {
+                            house.addEdge(aposento, connection, cost);
+                        }
+
+                    }
                 }
 
             }
