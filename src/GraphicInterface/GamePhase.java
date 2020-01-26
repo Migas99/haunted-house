@@ -85,11 +85,11 @@ public class GamePhase extends JLabel {
         top.add(giveUp, gbc);
 
         //////CENTER
-        if(this.checkGhost){
+        if (this.checkGhost) {
             this.setGhost();
         }
         center.add(this.ghost, JLabel.CENTER);
-        
+
         //////BOTTOM
         this.setPortas(bottom);
 
@@ -141,29 +141,32 @@ public class GamePhase extends JLabel {
 
     public void winScreen() {
         GridBagConstraints gbc = new GridBagConstraints();
-        JLabel giveUpLabel = new JLabel();
-        giveUpLabel.setLayout(new GridBagLayout());
+        JLabel winLabel = new JLabel();
+        winLabel.setLayout(new GridBagLayout());
+        winLabel.setIcon(new ImageIcon("resources/win.gif"));
         JButton backButton = new JButton();
 
         backButton.setText("BACK");
         backButton.setPreferredSize(new Dimension(200, 50));
         gbc.gridx = 0;
         gbc.gridy = 0;
-        giveUpLabel.add(backButton, gbc);
+        gbc.insets = new Insets(550,0,0,0);
+        winLabel.add(backButton, gbc);
 
         //UPDATE
+        if (this.sound) {
+            backgroundSound.stop();
+            backgroundSound.flush();
+            backgroundSound.close();
+        }
         this.frame.remove(this);
-        this.frame.add(giveUpLabel);
+        this.frame.add(winLabel);
         SwingUtilities.updateComponentTreeUI(this.frame);
         this.frame.setVisible(true);
+
         backButton.addActionListener((ActionEvent event) -> {
             //UPDATE
-            if (this.sound) {
-                backgroundSound.stop();
-                backgroundSound.flush();
-                backgroundSound.close();
-            }
-            this.frame.remove(giveUpLabel);
+            this.frame.remove(winLabel);
             this.frame.add(this.mainPanel);
             SwingUtilities.updateComponentTreeUI(this.frame);
             this.frame.setVisible(true);
@@ -264,7 +267,7 @@ public class GamePhase extends JLabel {
                         checkG = true;
                     }
                     if (this.mapGraph.isComplete()) {
-                        this.giveUpScreen();
+                        this.winScreen();
                     } else if (!this.mapGraph.isAlive()) {
                         this.deadScreen();
                     } else {

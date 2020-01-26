@@ -44,9 +44,9 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implement
             if (this.adjMatrix[positionIndex][nextPositionIndex] >= 0) {
                 this.position = nextPosition;
                 this.pathTaken.addToRear(this.position);
-                this.healthPoints = this.healthPoints - this.adjMatrix[nextPositionIndex][positionIndex];
-                System.out.println(this.adjMatrix[nextPositionIndex][positionIndex]);
-                return this.adjMatrix[nextPositionIndex][positionIndex] > 0;
+                this.healthPoints = this.healthPoints - this.adjMatrix[positionIndex][nextPositionIndex];
+                System.out.println(this.adjMatrix[positionIndex][nextPositionIndex]);
+                return this.adjMatrix[positionIndex][nextPositionIndex] > 0;
             } else {
                 throw new EdgeNotFoundException();
             }
