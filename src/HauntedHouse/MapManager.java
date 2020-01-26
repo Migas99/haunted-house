@@ -113,7 +113,6 @@ public class MapManager implements MapManagerADT {
                     if (connection.equals("exterior")) {
                         house.addEdge(aposento, connection, 0);
                     } else {
-
                         /**
                          * Vamos buscar então se a próxima secção tem um
                          * fantasma, para definir o custo do atual vértice para
@@ -127,11 +126,9 @@ public class MapManager implements MapManagerADT {
                                 cost = room.get("fantasma").getAsDouble();
                             }
                         }
-
                         if (found) {
                             house.addEdge(aposento, connection, cost);
                         }
-
                     }
                 }
 
