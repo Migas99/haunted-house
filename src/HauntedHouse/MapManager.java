@@ -82,7 +82,6 @@ public class MapManager implements MapManagerADT {
         JsonArray connections;
         String aposento;
         String connection;
-        String nextAposento;
         double cost = 0;
 
         /**
@@ -108,7 +107,9 @@ public class MapManager implements MapManagerADT {
                 } else {
                     /**
                      * Se a connection for "exterior", significa que não terá
-                     * custo
+                     * custo e que não teremos de verificar se as suas próximas
+                     * ligações tem fantasma (porque o jogo acaba quando se
+                     * chega ao exterior)
                      */
                     if (connection.equals("exterior")) {
                         house.addEdge(aposento, connection, 0);

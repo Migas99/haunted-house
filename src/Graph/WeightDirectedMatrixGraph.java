@@ -79,7 +79,7 @@ public class WeightDirectedMatrixGraph<T> extends DirectedMatrixGraph<T> impleme
             isVertexUsed[cheapestVertex] = true;
 
             for (int j = 0; j < this.numVertices; j++) {
-                if (!isVertexUsed[j] && this.adjMatrix[cheapestVertex][j] != -1 && weight[cheapestVertex] != Double.MAX_VALUE
+                if (!isVertexUsed[j] && this.adjMatrix[cheapestVertex][j] != null && weight[cheapestVertex] != Double.MAX_VALUE
                         && weight[cheapestVertex] + this.adjMatrix[cheapestVertex][j] < weight[j]) {
                     weight[j] = weight[cheapestVertex] + this.adjMatrix[cheapestVertex][j];
                 }
@@ -107,7 +107,7 @@ public class WeightDirectedMatrixGraph<T> extends DirectedMatrixGraph<T> impleme
             return resultGraph;
         }
 
-        resultGraph.adjMatrix = new double[this.numVertices][this.numVertices];
+        resultGraph.adjMatrix = new Double[this.numVertices][this.numVertices];
         for (int i = 0; i < this.numVertices; i++) {
             for (int j = 0; j < this.numVertices; j++) {
                 resultGraph.adjMatrix[i][j] = Double.POSITIVE_INFINITY;

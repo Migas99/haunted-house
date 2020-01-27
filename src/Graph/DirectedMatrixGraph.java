@@ -17,7 +17,7 @@ public class DirectedMatrixGraph<T> implements GraphADT<T> {
 
     protected final int DEFAULT_CAPACITY = 10;
     protected int numVertices; // number of vertices in the graph
-    protected double[][] adjMatrix; // adjacency matrix
+    protected Double[][] adjMatrix; // adjacency matrix
     protected T[] vertices; // values of vertices
 
     /**
@@ -25,7 +25,7 @@ public class DirectedMatrixGraph<T> implements GraphADT<T> {
      */
     public DirectedMatrixGraph() {
         this.numVertices = 0;
-        this.adjMatrix = new double[DEFAULT_CAPACITY][DEFAULT_CAPACITY];
+        this.adjMatrix = new Double[DEFAULT_CAPACITY][DEFAULT_CAPACITY];
         this.vertices = (T[]) (new Object[DEFAULT_CAPACITY]);
     }
 
@@ -54,8 +54,8 @@ public class DirectedMatrixGraph<T> implements GraphADT<T> {
         if (notInTheGraph) {
             this.vertices[this.numVertices] = vertex;
             for (int i = 0; i < this.numVertices; i++) {
-                this.adjMatrix[this.numVertices][i] = -1;
-                this.adjMatrix[i][this.numVertices] = -1;
+                this.adjMatrix[this.numVertices][i] = null;
+                this.adjMatrix[i][this.numVertices] = null;
             }
 
             this.numVertices++;
@@ -96,10 +96,10 @@ public class DirectedMatrixGraph<T> implements GraphADT<T> {
 
             /* Preenchemos com -1  */
             for (int i = 0; i < this.numVertices; i++) {
-                this.adjMatrix[this.numVertices - 1][i] = -1;
+                this.adjMatrix[this.numVertices - 1][i] = null;
             }
             for (int i = 0; i < this.numVertices; i++) {
-                this.adjMatrix[i][this.numVertices - 1] = -1;
+                this.adjMatrix[i][this.numVertices - 1] = null;
             }
 
             this.numVertices--;
@@ -119,7 +119,7 @@ public class DirectedMatrixGraph<T> implements GraphADT<T> {
         int destination = this.getIndex(vertex2);
 
         if (this.indexIsValid(source) && this.indexIsValid(destination)) {
-            this.adjMatrix[source][destination] = 0;
+            this.adjMatrix[source][destination] = 0.0;
         }
 
     }
@@ -136,7 +136,7 @@ public class DirectedMatrixGraph<T> implements GraphADT<T> {
         int destination = this.getIndex(vertex2);
 
         if (this.indexIsValid(source) && this.indexIsValid(destination)) {
-            this.adjMatrix[source][destination] = -1;
+            this.adjMatrix[source][destination] = null;
         }
     }
 
@@ -375,7 +375,7 @@ public class DirectedMatrixGraph<T> implements GraphADT<T> {
 
         this.vertices = expandCapacity;
 
-        double[][] expandMatrixCapacity = new double[this.adjMatrix.length + DEFAULT_CAPACITY][this.adjMatrix[0].length + DEFAULT_CAPACITY];
+        Double[][] expandMatrixCapacity = new Double[this.adjMatrix.length + DEFAULT_CAPACITY][this.adjMatrix[0].length + DEFAULT_CAPACITY];
 
         for (int i = 0; i < this.adjMatrix.length; i++) {
             for (int j = 0; j < this.adjMatrix[0].length; j++) {
@@ -397,7 +397,7 @@ public class DirectedMatrixGraph<T> implements GraphADT<T> {
     private Iterator dijkstra(int source, int destination) throws EmptyCollectionException, PathNotFoundException {
         double[] distances = new double[this.numVertices];
         boolean[] isVertexUsed = new boolean[this.numVertices];
-        int[] previous = new int[this.numVertices];
+        Integer[] previous = new Integer[this.numVertices];
 
         for (int i = 0; i < this.numVertices; i++) {
             distances[i] = Double.MAX_VALUE;
@@ -413,7 +413,7 @@ public class DirectedMatrixGraph<T> implements GraphADT<T> {
             isVertexUsed[cheapestVertex] = true;
 
             for (int j = 0; j < this.numVertices; j++) {
-                if (!isVertexUsed[j] && this.adjMatrix[cheapestVertex][j] != -1 && distances[cheapestVertex] != Double.MAX_VALUE
+                if (!isVertexUsed[j] && this.adjMatrix[cheapestVertex][j] != null && distances[cheapestVertex] != Double.MAX_VALUE
                         && distances[cheapestVertex] + this.adjMatrix[cheapestVertex][j] < distances[j]) {
                     distances[j] = distances[cheapestVertex] + this.adjMatrix[cheapestVertex][j];
                     previous[j] = cheapestVertex;
@@ -424,7 +424,7 @@ public class DirectedMatrixGraph<T> implements GraphADT<T> {
         ArrayUnorderedList<T> resultList = new ArrayUnorderedList<>();
         int target = destination;
 
-        if (previous[target] != -1) {
+        if (previous[target] != null) {
             while (target != -1) {
                 resultList.addToFront(this.vertices[target]);
                 target = previous[target];
