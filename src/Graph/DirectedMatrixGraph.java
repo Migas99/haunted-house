@@ -94,7 +94,7 @@ public class DirectedMatrixGraph<T> implements GraphADT<T> {
                 }
             }
 
-            /* Preenchemos com -1  */
+            /* Preenchemos com null  */
             for (int i = 0; i < this.numVertices; i++) {
                 this.adjMatrix[this.numVertices - 1][i] = null;
             }

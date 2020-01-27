@@ -41,7 +41,7 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implement
         int nextPositionIndex = this.getIndex(nextPosition);
 
         if (this.indexIsValid(nextPositionIndex)) {
-            if (this.adjMatrix[positionIndex][nextPositionIndex] >= 0) {
+            if (this.adjMatrix[positionIndex][nextPositionIndex] != null) {
                 this.position = nextPosition;
                 this.pathTaken.addToRear(this.position);
                 this.healthPoints = this.healthPoints - this.adjMatrix[positionIndex][nextPositionIndex];
@@ -78,7 +78,7 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implement
 
         if (this.indexIsValid(vertexIndex)) {
             for (int i = 0; i < this.adjMatrix.length; i++) {
-                if (this.adjMatrix[vertexIndex][i] >= 0 && this.vertices[i] != vertex) {
+                if (this.adjMatrix[vertexIndex][i] != null && this.vertices[i] != vertex) {
                     options.addToRear(this.vertices[i]);
                 }
             }
@@ -118,7 +118,7 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implement
     public void setDifficulty() {
         for (int i = 0; i < this.numVertices; i++) {
             for (int j = 0; j < this.numVertices; j++) {
-                if (this.adjMatrix[i][j] > 0) {
+                if (this.adjMatrix[i][j] != null) {
                     this.adjMatrix[i][j] = this.adjMatrix[i][j] * this.level;
                 }
             }
