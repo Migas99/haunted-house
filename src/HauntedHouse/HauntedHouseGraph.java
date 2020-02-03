@@ -145,6 +145,10 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implement
     public void setEndPosition(T vertex) {
         this.endPosition = vertex;
     }
+    
+    public T getEndPosition(){
+        return this.endPosition;
+    }
 
     /**
      * Method responsible for adding a new classification to the database.
@@ -204,5 +208,4 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implement
     public int getLevel() {
         return this.level;
     }
-
 }

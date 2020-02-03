@@ -14,9 +14,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Objects;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.ImageIcon;
@@ -357,14 +359,14 @@ public class MainMenu extends JFrame {
                 } catch (FileNotFoundException ex) {
                 }
                 JLabel map = null;
-                 Thread wait = null;
+                Thread wait = null;
                 if (this.level == 1) {
                     map = this.showMap(mainPanel);
                     wait = new Thread(new Wait(map, 5000));
-                } else if (this.level == 2){
+                } else if (this.level == 2) {
                     map = this.showMap(mainPanel);
                     wait = new Thread(new Wait(map, 1000));
-                } else if (this.level == 3){
+                } else if (this.level == 3) {
                     wait = new Thread(new Wait(mainPanel, 0));
                 }
                 wait.start();
@@ -388,9 +390,10 @@ public class MainMenu extends JFrame {
             } catch (IOException ex) {
             }
         }
-        GamePhase game = new GamePhase(this, this.background, this.soundEnable, this.mapGraph, map, backgroundSound, false);
+        int help = 3 - this.mapGraph.getLevel();
+        GamePhase game = new GamePhase(this, this.background, this.soundEnable, this.mapGraph, map, backgroundSound, false, help);
     }
-    
+
     public AudioInputStream backgroundSound() {
         AudioInputStream audioinputstream = null;
         try {
@@ -399,6 +402,14 @@ public class MainMenu extends JFrame {
         } catch (UnsupportedAudioFileException | IOException e) {
         }
         return audioinputstream;
+    }
+
+    public static void setVolume(Clip clip, int level) {
+        Objects.requireNonNull(clip);
+        FloatControl volume = (FloatControl) clip.getControl(FloatControl.Type.VOLUME);
+        if (volume != null) {
+            volume.setValue((float) (level / 100.0));
+        }
     }
 
     public JLabel showMap(JLabel mainPanel) {
@@ -419,8 +430,10 @@ public class MainMenu extends JFrame {
     }
 
     public class Wait implements Runnable {
+
         private JLabel label;
         private int time;
+
         public Wait(JLabel label, int time) {
             this.label = label;
             this.time = time;
