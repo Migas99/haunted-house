@@ -1,1 +1,28 @@
-
+{
+  "classifications": [
+    {
+      "Player": "Miguel",
+      "Map": "sexta-feira 13",
+      "Path": [],
+      "HealthPoints": 55.0
+    },
+    {
+      "Player": "Pedro",
+      "Map": "sexta-feira 13",
+      "Path": [],
+      "HealthPoints": 95.0
+    },
+    {
+      "Player": "Joao",
+      "Map": "sexta-feira 13",
+      "Path": [],
+      "HealthPoints": 55.0
+    },
+    {
+      "Player": "Luis",
+      "Map": "sexta-feira 13",
+      "Path": [],
+      "HealthPoints": 25.0
+    }
+  ]
+}

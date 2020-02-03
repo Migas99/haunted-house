@@ -4,28 +4,20 @@ import Exceptions.EmptyCollectionException;
 import Exceptions.PathNotFoundException;
 import Exceptions.VertexNotFoundException;
 import Graph.WeightDirectedMatrixGraph;
+import HauntedHouse.ClassificationManager;
 import HauntedHouse.MapManager;
+import LinkedList.ArrayUnorderedList;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Iterator;
 
 public class Start {
 
-    public static void main(String[] args) throws EmptyCollectionException, VertexNotFoundException, PathNotFoundException, FileNotFoundException {
+    public static void main(String[] args) throws EmptyCollectionException, VertexNotFoundException, PathNotFoundException, FileNotFoundException, IOException {
         MapManager mapm = new MapManager();
         WeightDirectedMatrixGraph<String> house = mapm.loadMapFromJSON("sexta-feira 13");
 
-        /*house.addVertex("Cozinha");
-        house.addVertex("Sala");
-        house.addVertex("Saida");
-        house.addVertex("Entrada");
-        house.addVertex("Sotao");
-
-        house.addEdge("Entrada", "Cozinha", 0);
-        house.addEdge("Cozinha", "Sala", 0);
-        house.addEdge("Sala", "Saida", 0);*/
-       // house.addEdge("Entrada", "Saida", 0);
-
-        Iterator iterator = house.iteratorShortestPath("entrada", "exterior");
+        /*Iterator iterator = house.iteratorShortestPath("entrada", "exterior");
         double a = house.shortestPathWeight("entrada", "exterior");
         
         while(iterator.hasNext()){
@@ -33,7 +25,26 @@ public class Start {
         }
         System.out.println(a);
         
-        System.out.println(house.toString());
-        
+        System.out.println(house.toString());*/
+        ClassificationManager<String> classificationM = new ClassificationManager();
+        /*ArrayUnorderedList<String> list = new ArrayUnorderedList<>();
+       classificationM.addNewClassification("Miguel", "sexta-feira 13", list, 55);
+       classificationM.addNewClassification("Pedro", "sexta-feira 13", list, 95);
+       classificationM.addNewClassification("Joao", "sexta-feira 13", list, 55);
+       classificationM.addNewClassification("Luis", "sexta-feira 13", list, 25);*/
+        //System.out.println(classificationM.getClassificationTableInString());
+
+        ArrayUnorderedList<ArrayUnorderedList<String>> ok = classificationM.getClassificationTable();
+        ArrayUnorderedList<String> kek;
+
+        Iterator it1 = ok.iterator();
+        while (it1.hasNext()) {
+            kek = (ArrayUnorderedList<String>) it1.next();
+            Iterator it2 = kek.iterator();
+            while (it2.hasNext()) {
+                System.out.print(it2.next() + " ");
+            }
+            System.out.println();
+        }
     }
 }

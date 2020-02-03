@@ -1,40 +1,26 @@
 package HauntedHouse;
 
+import Exceptions.EmptyCollectionException;
 import LinkedList.ArrayUnorderedList;
+import LinkedList.DoubleLinkedOrderedList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.annotations.Expose;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
+import java.util.Iterator;
 
 public class ClassificationManager<T> implements ClassificationManagerADT<T> {
 
-    private String directory;
-
-    @Expose
-    private String playerName;
-    @Expose
-    private String mapName;
-    @Expose
-    private ArrayUnorderedList<T> pathTaken;
-    @Expose
-    private double healthPoints;
+    private final String directory;
 
     public ClassificationManager() {
         this.directory = "database/classifications.json";
-    }
-
-    public ClassificationManager(String playerName, String mapName, ArrayUnorderedList<T> pathTaken, double healthPoints) {
-        this.playerName = playerName;
-        this.mapName = mapName;
-        this.pathTaken = pathTaken;
-        this.healthPoints = healthPoints;
     }
 
     /**
@@ -49,12 +35,103 @@ public class ClassificationManager<T> implements ClassificationManagerADT<T> {
      */
     @Override
     public void addNewClassification(String playerName, String mapName, ArrayUnorderedList<T> pathTaken, double healthPoints) throws IOException {
-        Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        JsonParser parser = new JsonParser();
+        JsonObject object;
+        JsonObject player = new JsonObject();
+        JsonArray path = new JsonArray();
+        Iterator iterator = pathTaken.iterator();
 
-        FileWriter file = new FileWriter(this.directory, true);
-        ClassificationManager classification = new ClassificationManager(playerName, mapName, pathTaken, healthPoints);
-        gson.toJson(classification, file);
+        try {
+            object = parser.parse(new FileReader(this.directory)).getAsJsonObject();
+        } catch (IllegalStateException e) {
+            object = new JsonObject();
+            object.add("classifications", new JsonArray());
+        }
 
+        JsonArray players = object.get("classifications").getAsJsonArray();
+
+        player.addProperty("Player", playerName);
+        player.addProperty("Map", mapName);
+
+        while (iterator.hasNext()) {
+            path.add((String) iterator.next());
+        }
+
+        player.add("Path", path);
+        player.addProperty("HealthPoints", healthPoints);
+
+        players.add(player);
+
+        JsonObject jsonFile = new JsonObject();
+        jsonFile.add("classifications", players);
+
+        try (Writer writer = new FileWriter(this.directory)) {
+            gson.toJson(jsonFile, writer);
+            writer.flush();
+        }
+    }
+
+    /**
+     * Returns the classification table.
+     *
+     * @return classification table
+     * @throws FileNotFoundException if the file classifications is not found
+     * @throws EmptyCollectionException if the collection is empty
+     */
+    @Override
+    public ArrayUnorderedList<ArrayUnorderedList<String>> getClassificationTable() throws FileNotFoundException, EmptyCollectionException {
+        ArrayUnorderedList<ArrayUnorderedList<String>> classificationTable = new ArrayUnorderedList<>();
+        ArrayUnorderedList<String> playerInfo;
+        DoubleLinkedOrderedList<Double> scores = new DoubleLinkedOrderedList<>();
+        ArrayUnorderedList<Integer> alreadyInTheTable = new ArrayUnorderedList<>();
+
+        JsonParser parser = new JsonParser();
+        JsonObject object = parser.parse(new FileReader(this.directory)).getAsJsonObject();
+        JsonArray players = object.get("classifications").getAsJsonArray();
+        JsonObject player;
+        JsonArray path;
+        String pathtaken;
+
+        for (int i = 0; i < players.size(); i++) {
+            player = players.get(i).getAsJsonObject();
+            scores.add(player.get("HealthPoints").getAsDouble());
+        }
+
+        for (int i = 0; i < players.size();) {
+            player = players.get(i).getAsJsonObject();
+
+            if (!alreadyInTheTable.contains(i) && scores.last() == player.get("HealthPoints").getAsDouble()) {
+                alreadyInTheTable.addToRear(i);
+                scores.removeLast();
+                playerInfo = new ArrayUnorderedList<>();
+                playerInfo.addToRear(player.get("Player").getAsString());
+                playerInfo.addToRear(player.get("Map").getAsString());
+
+                path = player.get("Path").getAsJsonArray();
+                pathtaken = "Path Taken: [ ";
+                for (int j = 0; j < path.size(); j++) {
+                    if (j == path.size() - 1) {
+                        pathtaken = pathtaken + path.get(j).getAsString();
+                    } else {
+                        pathtaken = pathtaken + path.get(j).getAsString() + " | ";
+                    }
+                }
+                pathtaken = pathtaken + " ]";
+
+                playerInfo.addToRear(pathtaken);
+                playerInfo.addToRear(player.get("HealthPoints").getAsString());
+                classificationTable.addToRear(playerInfo);
+                i = 0;
+
+            } else {
+                i++;
+
+            }
+
+        }
+
+        return classificationTable;
     }
 
     /**
@@ -64,7 +141,7 @@ public class ClassificationManager<T> implements ClassificationManagerADT<T> {
      * @throws FileNotFoundException if the player file is not found
      */
     @Override
-    public String getClassificationTable() throws FileNotFoundException {
+    public String getClassificationTableInString() throws FileNotFoundException {
         String classificationTable = "--- Classifications Table ---\n";
 
         JsonParser parser = new JsonParser();

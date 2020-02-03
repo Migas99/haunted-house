@@ -1,5 +1,6 @@
 package HauntedHouse;
 
+import Exceptions.EmptyCollectionException;
 import LinkedList.ArrayUnorderedList;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -23,7 +24,16 @@ public interface ClassificationManagerADT<T> {
      *
      * @return classification table
      * @throws FileNotFoundException if the classification file is not found
+     * @throws EmptyCollectionException if the collection is empty
      */
-    public String getClassificationTable() throws FileNotFoundException;
+    public ArrayUnorderedList<ArrayUnorderedList<String>> getClassificationTable() throws FileNotFoundException, EmptyCollectionException;
+
+    /**
+     * Returns the classification table in String format.
+     *
+     * @return classification table
+     * @throws FileNotFoundException if the classification file is not found
+     */
+    public String getClassificationTableInString() throws FileNotFoundException;
 
 }

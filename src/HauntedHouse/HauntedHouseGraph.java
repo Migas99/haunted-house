@@ -85,6 +85,7 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implement
         } else {
             throw new VertexNotFoundException();
         }
+        
         return options;
     }
 
@@ -174,7 +175,7 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implement
     @Override
     public String getClassificationTable() throws FileNotFoundException {
         this.classification = new ClassificationManager<>();
-        return this.classification.getClassificationTable();
+        return this.classification.getClassificationTableInString();
     }
 
     public void setMapName(String mapName) {
