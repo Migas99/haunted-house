@@ -35,7 +35,7 @@ public class Start {
        classificationM.addNewClassification("Luis", "sexta-feira 13", list, 25, 1);*/
         //System.out.println(classificationM.getClassificationTableInString());
 
-        ArrayUnorderedList<ArrayUnorderedList<String>> ok = classificationM.getClassificationTable(3);
+        ArrayUnorderedList<ArrayUnorderedList<String>> ok = classificationM.getClassificationTable("sexta-feira 13", 2);
         ArrayUnorderedList<String> kek;
 
         Iterator it1 = ok.iterator();

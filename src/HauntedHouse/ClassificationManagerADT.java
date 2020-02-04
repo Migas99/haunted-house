@@ -23,12 +23,13 @@ public interface ClassificationManagerADT<T> {
     /**
      * Returns the classification table.
      *
+     * @param mapName name of the map
      * @param level level the player played
      * @return classification table
      * @throws FileNotFoundException if the classification file is not found
      * @throws EmptyCollectionException if the collection is empty
      */
-    public ArrayUnorderedList<ArrayUnorderedList<String>> getClassificationTable(int level) throws FileNotFoundException, EmptyCollectionException;
+    public ArrayUnorderedList<ArrayUnorderedList<String>> getClassificationTable(String mapName, int level) throws FileNotFoundException, EmptyCollectionException;
 
     /**
      * Returns the classification table in String format.

@@ -24,7 +24,7 @@ public class ClassificationManager<T> implements ClassificationManagerADT<T> {
      * ficheiro classifications se encontra
      */
     public ClassificationManager() {
-        this.directory = "database/classifications.json";
+        this.directory = "database/classifications";
     }
 
     /**
@@ -51,7 +51,7 @@ public class ClassificationManager<T> implements ClassificationManagerADT<T> {
          * vazio, é então criado o objecto classifications
          */
         try {
-            object = parser.parse(new FileReader(this.directory)).getAsJsonObject();
+            object = parser.parse(new FileReader(this.directory + "/" + mapName + ".json")).getAsJsonObject();
         } catch (IllegalStateException e) {
             object = new JsonObject();
             object.add("classifications", new JsonArray());
@@ -82,7 +82,7 @@ public class ClassificationManager<T> implements ClassificationManagerADT<T> {
         /**
          * No fim, damos override no ficheiro todo das classificações
          */
-        try (Writer writer = new FileWriter(this.directory)) {
+        try (Writer writer = new FileWriter(this.directory + "/" + mapName + ".json")) {
             gson.toJson(jsonFile, writer);
             writer.flush();
         }
@@ -91,13 +91,14 @@ public class ClassificationManager<T> implements ClassificationManagerADT<T> {
     /**
      * Returns the classification table.
      *
+     * @param mapName name of the map
      * @param level level the player played
      * @return classification table
      * @throws FileNotFoundException if the file classifications is not found
      * @throws EmptyCollectionException if the collection is empty
      */
     @Override
-    public ArrayUnorderedList<ArrayUnorderedList<String>> getClassificationTable(int level) throws FileNotFoundException, EmptyCollectionException {
+    public ArrayUnorderedList<ArrayUnorderedList<String>> getClassificationTable(String mapName, int level) throws FileNotFoundException, EmptyCollectionException {
         ArrayUnorderedList<ArrayUnorderedList<String>> classificationTable = new ArrayUnorderedList<>();
         ArrayUnorderedList<String> playerInfo;
         DoubleLinkedOrderedList<Double> scores = new DoubleLinkedOrderedList<>();
@@ -105,7 +106,7 @@ public class ClassificationManager<T> implements ClassificationManagerADT<T> {
         String difficulty = this.getDifficulty(level);
 
         JsonParser parser = new JsonParser();
-        JsonObject object = parser.parse(new FileReader(this.directory)).getAsJsonObject();
+        JsonObject object = parser.parse(new FileReader(this.directory + "/" + mapName + ".json")).getAsJsonObject();
         JsonArray players = object.get("classifications").getAsJsonArray();
         JsonObject player;
         JsonArray path;

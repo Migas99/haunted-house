@@ -17,7 +17,7 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implement
     private T endPosition;
     private T position;
     private final ArrayUnorderedList<T> pathTaken;
-    private ClassificationManager<T> classification;
+    private final ClassificationManager<T> classification;
 
     public HauntedHouseGraph() {
         super();
@@ -176,23 +176,12 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implement
         ArrayUnorderedList<ArrayUnorderedList<String>> table = null;
 
         try {
-            table = this.classification.getClassificationTable(this.level);
+            table = this.classification.getClassificationTable(this.mapName, this.level);
         } catch (EmptyCollectionException e) {
             System.err.println(e);
         }
 
         return table;
-    }
-
-    /**
-     * Returns the classification table in .
-     *
-     * @return classification table
-     * @throws FileNotFoundException if the classifications file is not found
-     */
-    @Override
-    public String getClassificationTableInString() throws FileNotFoundException {
-        return this.classification.getClassificationTableInString();
     }
 
     public void setMapName(String mapName) {
