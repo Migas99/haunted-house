@@ -1,13 +1,12 @@
 package HauntedHouse;
 
 import Exceptions.EdgeNotFoundException;
+import Exceptions.EmptyCollectionException;
 import Exceptions.VertexNotFoundException;
 import Graph.WeightDirectedMatrixGraph;
 import LinkedList.ArrayUnorderedList;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implements HauntedHouseGraphADT<T> {
 
@@ -24,6 +23,7 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implement
         super();
         this.playerName = null;
         this.pathTaken = new ArrayUnorderedList<>();
+        this.classification = new ClassificationManager<>();
     }
 
     /**
@@ -85,7 +85,7 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implement
         } else {
             throw new VertexNotFoundException();
         }
-        
+
         return options;
     }
 
@@ -146,8 +146,8 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implement
     public void setEndPosition(T vertex) {
         this.endPosition = vertex;
     }
-    
-    public T getEndPosition(){
+
+    public T getEndPosition() {
         return this.endPosition;
     }
 
@@ -157,11 +157,10 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implement
     @Override
     public void addNewClassification() {
         if (this.playerName != null) {
-            this.classification = new ClassificationManager<>();
             try {
-                this.classification.addNewClassification(this.playerName, this.mapName, this.pathTaken, this.healthPoints);
-            } catch (IOException ex) {
-                Logger.getLogger(HauntedHouseGraph.class.getName()).log(Level.SEVERE, null, ex);
+                this.classification.addNewClassification(this.playerName, this.mapName, this.pathTaken, this.healthPoints, this.level);
+            } catch (IOException e) {
+                System.err.println(e);
             }
         }
     }
@@ -173,8 +172,26 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implement
      * @throws FileNotFoundException if the classifications file is not found
      */
     @Override
-    public String getClassificationTable() throws FileNotFoundException {
-        this.classification = new ClassificationManager<>();
+    public ArrayUnorderedList<ArrayUnorderedList<String>> getClassificationTable() throws FileNotFoundException {
+        ArrayUnorderedList<ArrayUnorderedList<String>> table = null;
+
+        try {
+            table = this.classification.getClassificationTable(this.level);
+        } catch (EmptyCollectionException e) {
+            System.err.println(e);
+        }
+
+        return table;
+    }
+
+    /**
+     * Returns the classification table in .
+     *
+     * @return classification table
+     * @throws FileNotFoundException if the classifications file is not found
+     */
+    @Override
+    public String getClassificationTableInString() throws FileNotFoundException {
         return this.classification.getClassificationTableInString();
     }
 

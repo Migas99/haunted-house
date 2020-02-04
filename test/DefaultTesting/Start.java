@@ -28,13 +28,14 @@ public class Start {
         System.out.println(house.toString());*/
         ClassificationManager<String> classificationM = new ClassificationManager();
         /*ArrayUnorderedList<String> list = new ArrayUnorderedList<>();
-       classificationM.addNewClassification("Miguel", "sexta-feira 13", list, 55);
-       classificationM.addNewClassification("Pedro", "sexta-feira 13", list, 95);
-       classificationM.addNewClassification("Joao", "sexta-feira 13", list, 55);
-       classificationM.addNewClassification("Luis", "sexta-feira 13", list, 25);*/
+       classificationM.addNewClassification("Miguel", "sexta-feira 13", list, 55, 2);
+       classificationM.addNewClassification("Pedro", "sexta-feira 13", list, 95, 2);
+       classificationM.addNewClassification("Joao", "sexta-feira 13", list, 55, 2);
+       classificationM.addNewClassification("Luis", "sexta-feira 13", list, 25, 3);
+       classificationM.addNewClassification("Luis", "sexta-feira 13", list, 25, 1);*/
         //System.out.println(classificationM.getClassificationTableInString());
 
-        ArrayUnorderedList<ArrayUnorderedList<String>> ok = classificationM.getClassificationTable();
+        ArrayUnorderedList<ArrayUnorderedList<String>> ok = classificationM.getClassificationTable(3);
         ArrayUnorderedList<String> kek;
 
         Iterator it1 = ok.iterator();

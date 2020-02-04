@@ -80,6 +80,14 @@ public interface HauntedHouseGraphADT<T> extends WeightGraphADT<T> {
      * @return classification table
      * @throws FileNotFoundException if the classifications file is not found
      */
-    public String getClassificationTable() throws FileNotFoundException;
+    public ArrayUnorderedList<ArrayUnorderedList<String>> getClassificationTable() throws FileNotFoundException;
+    
+    /**
+     * Returns the classification table in string.
+     *
+     * @return classification table
+     * @throws FileNotFoundException if the classifications file is not found
+     */
+    public String getClassificationTableInString() throws FileNotFoundException;
 
 }

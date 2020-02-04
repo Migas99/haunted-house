@@ -38,7 +38,7 @@ public class ClassificationManager<T> implements ClassificationManagerADT<T> {
      * file
      */
     @Override
-    public void addNewClassification(String playerName, String mapName, ArrayUnorderedList<T> pathTaken, double healthPoints) throws IOException {
+    public void addNewClassification(String playerName, String mapName, ArrayUnorderedList<T> pathTaken, double healthPoints, int level) throws IOException {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         JsonParser parser = new JsonParser();
         JsonObject object;
@@ -65,6 +65,7 @@ public class ClassificationManager<T> implements ClassificationManagerADT<T> {
 
         player.addProperty("Player", playerName);
         player.addProperty("Map", mapName);
+        player.addProperty("Difficulty", this.getDifficulty(level));
 
         while (iterator.hasNext()) {
             path.add((String) iterator.next());
@@ -90,16 +91,18 @@ public class ClassificationManager<T> implements ClassificationManagerADT<T> {
     /**
      * Returns the classification table.
      *
+     * @param level level the player played
      * @return classification table
      * @throws FileNotFoundException if the file classifications is not found
      * @throws EmptyCollectionException if the collection is empty
      */
     @Override
-    public ArrayUnorderedList<ArrayUnorderedList<String>> getClassificationTable() throws FileNotFoundException, EmptyCollectionException {
+    public ArrayUnorderedList<ArrayUnorderedList<String>> getClassificationTable(int level) throws FileNotFoundException, EmptyCollectionException {
         ArrayUnorderedList<ArrayUnorderedList<String>> classificationTable = new ArrayUnorderedList<>();
         ArrayUnorderedList<String> playerInfo;
         DoubleLinkedOrderedList<Double> scores = new DoubleLinkedOrderedList<>();
         ArrayUnorderedList<Integer> alreadyInTheTable = new ArrayUnorderedList<>();
+        String difficulty = this.getDifficulty(level);
 
         JsonParser parser = new JsonParser();
         JsonObject object = parser.parse(new FileReader(this.directory)).getAsJsonObject();
@@ -114,7 +117,9 @@ public class ClassificationManager<T> implements ClassificationManagerADT<T> {
          */
         for (int i = 0; i < players.size(); i++) {
             player = players.get(i).getAsJsonObject();
-            scores.add(player.get("HealthPoints").getAsDouble());
+            if (difficulty.equals(player.get("Difficulty").getAsString())) {
+                scores.add(player.get("HealthPoints").getAsDouble());
+            }
         }
 
         /**
@@ -122,6 +127,7 @@ public class ClassificationManager<T> implements ClassificationManagerADT<T> {
          * do JsonArray que contêm a lista das classificações dos jogadores
          */
         boolean done = false;
+        int playersNumber = scores.size();
         int i = 0;
         while (!done) {
             player = players.get(i).getAsJsonObject();
@@ -130,14 +136,16 @@ public class ClassificationManager<T> implements ClassificationManagerADT<T> {
              * Verificamos se este jogador já não foi "tomado em conta", e
              * verificamos se a pontuação dele é equivalente à maior pontuação
              * que se encontra atualmente na lista que contêm todas as
-             * pontuações
+             * pontuações e também verificamos se a dificuldade em que ele jogou
+             * é a mesma da dificuldade da tabela que queremos apresentar
              */
-            if (!alreadyInTheTable.contains(i) && scores.last() == player.get("HealthPoints").getAsDouble()) {
+            if (!alreadyInTheTable.contains(i) && scores.last() == player.get("HealthPoints").getAsDouble() && difficulty.equals(player.get("Difficulty").getAsString())) {
                 alreadyInTheTable.addToRear(i);
                 scores.removeLast();
                 playerInfo = new ArrayUnorderedList<>();
                 playerInfo.addToRear(player.get("Player").getAsString());
                 playerInfo.addToRear(player.get("Map").getAsString());
+                playerInfo.addToRear(player.get("Difficulty").getAsString());
 
                 path = player.get("Path").getAsJsonArray();
                 pathtaken = "Path Taken: [ ";
@@ -156,9 +164,10 @@ public class ClassificationManager<T> implements ClassificationManagerADT<T> {
                 i = 0;
 
                 /**
-                 * Caso as duas listas tenham o mesmo tamanho, encerramos o ciclo while
+                 * Caso as duas listas tenham o mesmo tamanho, encerramos o
+                 * ciclo while
                  */
-                if (alreadyInTheTable.size() == players.size()) {
+                if (playersNumber == alreadyInTheTable.size()) {
                     done = true;
                 }
 
@@ -208,4 +217,27 @@ public class ClassificationManager<T> implements ClassificationManagerADT<T> {
         return classificationTable;
     }
 
+    /**
+     * Converts the integer level into a String that represents its difficulty
+     *
+     * @param level integer level
+     * @return difficulty in string
+     */
+    private String getDifficulty(int level) {
+        String difficulty;
+
+        switch (level) {
+            case 1:
+                difficulty = "Easy";
+                break;
+            case 2:
+                difficulty = "Normal";
+                break;
+            default:
+                difficulty = "Hard";
+                break;
+        }
+
+        return difficulty;
+    }
 }

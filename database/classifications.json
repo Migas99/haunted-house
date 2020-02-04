@@ -3,24 +3,35 @@
     {
       "Player": "Miguel",
       "Map": "sexta-feira 13",
+      "Difficulty": "Normal",
       "Path": [],
       "HealthPoints": 55.0
     },
     {
       "Player": "Pedro",
       "Map": "sexta-feira 13",
+      "Difficulty": "Normal",
       "Path": [],
       "HealthPoints": 95.0
     },
     {
       "Player": "Joao",
       "Map": "sexta-feira 13",
+      "Difficulty": "Normal",
       "Path": [],
       "HealthPoints": 55.0
     },
     {
       "Player": "Luis",
       "Map": "sexta-feira 13",
+      "Difficulty": "Hard",
+      "Path": [],
+      "HealthPoints": 25.0
+    },
+    {
+      "Player": "Luis",
+      "Map": "sexta-feira 13",
+      "Difficulty": "Easy",
       "Path": [],
       "HealthPoints": 25.0
     }
