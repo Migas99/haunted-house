@@ -77,7 +77,7 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implement
         int vertexIndex = this.getIndex(vertex);
 
         if (this.indexIsValid(vertexIndex)) {
-            for (int i = 0; i < this.adjMatrix.length; i++) {
+            for (int i = 0; i < this.numVertices; i++) {
                 if (this.adjMatrix[vertexIndex][i] != null && this.vertices[i] != vertex) {
                     options.addToRear(this.vertices[i]);
                 }
