@@ -83,10 +83,10 @@ public class GamePhase extends JLabel {
         top.setPreferredSize(new Dimension(700, 100));
         //top.setOpaque(false);
         top.setBackground(Color.red);
-        center.setPreferredSize(new Dimension(700, 200));
+        center.setPreferredSize(new Dimension(700, 250));
         //center.setOpaque(false);
         center.setBackground(Color.green);
-        bottom.setPreferredSize(new Dimension(700, 400));
+        bottom.setPreferredSize(new Dimension(700, 350));
         //bottom.setOpaque(false);
         bottom.setBackground(Color.blue);
 
@@ -358,7 +358,7 @@ public class GamePhase extends JLabel {
             porta.setPreferredSize(new Dimension(100, 200));
             gbc.gridx = i;
             gbc.gridy = 0;
-            gbc.insets = new Insets(100, 5, 0, 5);
+            gbc.insets = new Insets(0, 5, 0, 5);
             label.add(porta, gbc);
             i++;
 

@@ -19,6 +19,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -180,7 +182,24 @@ public class MainMenu extends JFrame {
 
         //Show selected map
         confirmButton.addActionListener((ActionEvent event) -> {
-            
+            HauntedHouseGraph tempMap = new HauntedHouseGraph();
+            if (mapsList.getSelectedItem() != null) {
+                try {
+                    this.mapGraph = this.mapManager.loadMapFromJSON((String) mapsList.getSelectedItem());
+                } catch (FileNotFoundException ex) {
+                }
+                try {
+                    ////////////////////////////////////////////////////////////
+                    ////////////////////////////////////////////////////////////
+                    ////////////////////////////////////////////////////////////
+                    ////////////////////////////////////////////////////////////
+                    ////////////////////////////////////////////////////////////
+                    Iterator iteratorRoom = tempMap.getAvailableDoors(tempMap.getCurrentPosition()).iterator();
+                } catch (VertexNotFoundException ex) {
+                }
+            }
+            SwingUtilities.updateComponentTreeUI(this);
+            this.setVisible(true);
         });
 
         //Back to main Menu
@@ -205,16 +224,16 @@ public class MainMenu extends JFrame {
         JButton backButton = new JButton();
         JButton confirmButton = new JButton();
         mainPanel.setLayout(new BorderLayout());
-        
+
         JScrollPane scroll = new JScrollPane(scoresPanel);
-        
+
         scoresButton.addActionListener((ActionEvent event) -> {
             mapsList.removeAllItems();
             scoresPanel.removeAll();
             difficultyList.removeAllItems();
             buttonsPanel.setPreferredSize(new Dimension(700, 65));
             barPanel.setPreferredSize(new Dimension(700, 20));
-            scroll.setPreferredSize(new Dimension(700,600));
+            scroll.setPreferredSize(new Dimension(700, 600));
             barPanel.setBackground(Color.black);
 
             //MapsList
@@ -252,7 +271,7 @@ public class MainMenu extends JFrame {
             backButton.setText("Back");
             backButton.setPreferredSize(new Dimension(100, 30));
             buttonsPanel.add(backButton, gbc);
-            
+
             mainPanel.add(buttonsPanel, BorderLayout.PAGE_START);
             mainPanel.add(barPanel, BorderLayout.CENTER);
             mainPanel.add(scroll, BorderLayout.PAGE_END);
@@ -323,10 +342,9 @@ public class MainMenu extends JFrame {
             this.setVisible(true);
         });
     }
-    
+
     //SHOW INTERFACE TO USER SELECT GAME PREFERENCES
     public void pressPlayButtonMenu() {
-        this.soundEnable = true;
         GridBagConstraints gbc = new GridBagConstraints();
         JLabel mainPanel = new JLabel();
         mainPanel.setLayout(new BorderLayout());
@@ -339,6 +357,7 @@ public class MainMenu extends JFrame {
         JTextField inputUsername = new JTextField();
         JButton backButton = new JButton();
         JButton soundButton = new JButton();
+        JButton sound18Button = new JButton();
         JButton easyButton = new JButton();
         JButton normalButton = new JButton();
         JButton hardButton = new JButton();
@@ -347,7 +366,7 @@ public class MainMenu extends JFrame {
 
         playButton.addActionListener((ActionEvent event) -> {
             inputUsername.setText("");
-            this.mapGraph = null;
+            this.mapGraph = new HauntedHouseGraph();
             mapsList.removeAllItems();
             mapsList.setSelectedItem(null);
             buttonsPanel.setPreferredSize(new Dimension(700, 80));
@@ -360,16 +379,31 @@ public class MainMenu extends JFrame {
             //backbutton
             gbc.gridx = 0;
             gbc.gridy = 0;
-            gbc.insets = new Insets(25, 450, 25, 10);
+            gbc.insets = new Insets(0, 300, 0, 10);
             backButton.setText("BACK");
             backButton.setPreferredSize(new Dimension(100, 30));
             buttonsPanel.add(backButton, gbc);
 
-            //soundButton
+            //sound18Button
+            sound18Button.setPreferredSize(new Dimension(150, 30));
+            if(!this.sound18){
+                sound18Button.setText("Sound +18: OFF");
+            }else{
+                sound18Button.setText("Sound +18: ON");
+            }
             gbc.gridx = 1;
-            gbc.insets = new Insets(25, 10, 25, 10);
-            soundButton.setText("Sound: ON");
-            this.soundEnable = true;
+            gbc.insets = new Insets(0, 0, 0, 0);
+            buttonsPanel.add(sound18Button, gbc);
+            
+            //soundButton
+            gbc.gridx = 2;
+            gbc.insets = new Insets(0, 0, 0, 10);
+            if(this.soundEnable){
+                soundButton.setText("Sound: ON");
+            }
+            else{
+                soundButton.setText("Sound: OFF");
+            }
             soundButton.setPreferredSize(new Dimension(100, 30));
             buttonsPanel.add(soundButton, gbc);
 
@@ -486,6 +520,17 @@ public class MainMenu extends JFrame {
             } else {
                 soundEnable = true;
                 soundButton.setText("Sound: ON");
+            }
+        });
+        
+        //DEF SOUND 18
+        sound18Button.addActionListener((ActionEvent event) -> {
+            if (sound18) {
+                sound18 = false;
+                sound18Button.setText("Sound +18: OFF");
+            } else {
+                sound18 = true;
+                sound18Button.setText("Sound +18: ON");
             }
         });
 
