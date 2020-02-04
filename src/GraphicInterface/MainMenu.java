@@ -3,8 +3,10 @@ package GraphicInterface;
 import Exceptions.EmptyCollectionException;
 import Exceptions.PathNotFoundException;
 import Exceptions.VertexNotFoundException;
+import HauntedHouse.ClassificationManager;
 import HauntedHouse.HauntedHouseGraph;
 import HauntedHouse.MapManager;
+import LinkedList.ArrayUnorderedList;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -26,6 +28,7 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -33,6 +36,7 @@ import javax.swing.JFrame;
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -46,10 +50,11 @@ public class MainMenu extends JFrame {
     MapManager mapManager = new MapManager();
     JButton playButton;
     JButton mapButton;
+    JButton scoresButton;
     JComboBox settings;
     JLabel background = new JLabel();
     int level;
-    
+
     //Creatas the main menu and set value of frame
     public MainMenu() {
         super("HauntedHouse");
@@ -72,6 +77,7 @@ public class MainMenu extends JFrame {
         GridBagConstraints gbc = new GridBagConstraints();
         playButton = new JButton();
         mapButton = new JButton();
+        scoresButton = new JButton();
         settings = new JComboBox();
 
         playButton.setPreferredSize(new Dimension(300, 50));
@@ -82,12 +88,16 @@ public class MainMenu extends JFrame {
         mapButton.setText("MAP PREVIEW");
         mapButton.setFont(new Font("Arial", Font.BOLD, 30));
 
+        scoresButton.setPreferredSize(new Dimension(300, 50));
+        scoresButton.setText("SCORE TABLE");
+        scoresButton.setFont(new Font("Arial", Font.BOLD, 30));
+
         title.setIcon(new ImageIcon("resources/title.png"));
 
         //TITLE
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.insets = new Insets(0, 25, 150, 25);
+        gbc.insets = new Insets(0, 25, 100, 25);
         background.add(title, gbc);
 
         //START BUTTON
@@ -95,38 +105,48 @@ public class MainMenu extends JFrame {
         gbc.insets = new Insets(25, 25, 25, 25);
         background.add(playButton, gbc);
 
-        //MAP BUTTON BUTTON
+        //MAP BUTTON
         gbc.gridy = 2;
         background.add(mapButton, gbc);
 
+        //SCORES BUTTON
+        gbc.gridy = 3;
+        background.add(scoresButton, gbc);
+
         //PRESS BUTTON MAP PREVIEW
         pressMapButton();
-        
+
         //PRESS BUTTON TO GO TO GAME MENU
         pressPlayButtonMenu();
 
+        //PRESS BUTTON TO GO TO SCORES TABLE«
+        pressScoresButton();
+
         this.add(background);
     }
-    
+
     //SHOW SELECTED MAP
     public void pressMapButton() {
         GridBagConstraints gbc = new GridBagConstraints();
-        JPanel mainPanel = new JPanel(new BorderLayout());
+        JLabel mainPanel = new JLabel();
         JPanel buttonsPanel = new JPanel(new GridBagLayout());
-        JLabel map = new JLabel();
+        JPanel barPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout());
+        JPanel map = new JPanel();
         JComboBox mapsList = new JComboBox();
         JButton backButton = new JButton();
         JButton confirmButton = new JButton();
         mapButton.addActionListener((ActionEvent event) -> {
-            map.setIcon(null);
             mapsList.removeAllItems();
-            buttonsPanel.setPreferredSize(new Dimension(700, 80));
-            map.setPreferredSize(new Dimension(700, 620));
+            buttonsPanel.setPreferredSize(new Dimension(700, 65));
+            barPanel.setPreferredSize(new Dimension(700, 20));
+            map.setPreferredSize(new Dimension(700, 600));
+            barPanel.setBackground(Color.black);
 
             //MapsList
             gbc.gridx = 0;
             gbc.gridy = 0;
-            gbc.insets = new Insets(25, 15, 25, 0);
+            gbc.insets = new Insets(0, 15, 0, 0);
             mapsList.setPreferredSize(new Dimension(150, 30));
             Iterator iterator = mapManager.getMaps().iterator();
             while (iterator.hasNext()) {
@@ -138,7 +158,7 @@ public class MainMenu extends JFrame {
             //Confirm button
             gbc.gridx = 1;
             gbc.gridy = 0;
-            gbc.insets = new Insets(25, 0, 25, 300);
+            gbc.insets = new Insets(0, 0, 0, 300);
             confirmButton.setText("Confirm");
             confirmButton.setPreferredSize(new Dimension(100, 30));
             buttonsPanel.add(confirmButton, gbc);
@@ -146,12 +166,13 @@ public class MainMenu extends JFrame {
             //Back button
             gbc.gridx = 2;
             gbc.gridy = 0;
-            gbc.insets = new Insets(25, 0, 25, 15);
+            gbc.insets = new Insets(0, 0, 0, 15);
             backButton.setText("Back");
             backButton.setPreferredSize(new Dimension(100, 30));
             buttonsPanel.add(backButton, gbc);
 
             mainPanel.add(buttonsPanel, BorderLayout.PAGE_START);
+            mainPanel.add(barPanel, BorderLayout.CENTER);
             mainPanel.add(map, BorderLayout.PAGE_END);
 
             //UPDATE
@@ -160,13 +181,12 @@ public class MainMenu extends JFrame {
             SwingUtilities.updateComponentTreeUI(this);
             this.setVisible(true);
         });
-        
+
         //Show selected map
         confirmButton.addActionListener((ActionEvent event) -> {
-            //verificar se nao esta vazio
-            map.setIcon(new ImageIcon("resources/giratina.gif"));
+            
         });
-        
+
         //Back to main Menu
         backButton.addActionListener((ActionEvent event) -> {
             mainPanel.removeAll();
@@ -176,8 +196,135 @@ public class MainMenu extends JFrame {
             this.setVisible(true);
         });
     }
-    
-    
+
+    //SHOW SCORES TABLE
+    public void pressScoresButton() {
+        GridBagConstraints gbc = new GridBagConstraints();
+        JLabel mainPanel = new JLabel();
+        JPanel buttonsPanel = new JPanel(new GridBagLayout());
+        JPanel barPanel = new JPanel();
+        JPanel scoresPanel = new JPanel(new GridBagLayout());
+        JComboBox mapsList = new JComboBox();
+        JComboBox difficultyList = new JComboBox();
+        JButton backButton = new JButton();
+        JButton confirmButton = new JButton();
+        mainPanel.setLayout(new BorderLayout());
+        JScrollPane scroll = new JScrollPane(scoresPanel);
+        scoresButton.addActionListener((ActionEvent event) -> {
+            mapsList.removeAllItems();
+            difficultyList.removeAllItems();
+            buttonsPanel.setPreferredSize(new Dimension(700, 65));
+            barPanel.setPreferredSize(new Dimension(700, 20));
+            scroll.setPreferredSize(new Dimension(700,600));
+            barPanel.setBackground(Color.black);
+
+            //MapsList
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            gbc.insets = new Insets(0, 15, 0, 0);
+            mapsList.setPreferredSize(new Dimension(150, 30));
+            Iterator iterator = mapManager.getMaps().iterator();
+            while (iterator.hasNext()) {
+                mapsList.addItem(iterator.next());
+            }
+            mapsList.setSelectedItem(null);
+            buttonsPanel.add(mapsList, gbc);
+
+            //DifficultyOptions
+            gbc.gridx = 1;
+            gbc.insets = new Insets(0, 0, 0, 0);
+            difficultyList.setPreferredSize(new Dimension(100, 30));
+            difficultyList.addItem("1");
+            difficultyList.addItem("2");
+            difficultyList.addItem("3");
+            difficultyList.setSelectedItem(null);
+            buttonsPanel.add(difficultyList, gbc);
+
+            //Confirm button
+            gbc.gridx = 2;
+            gbc.insets = new Insets(0, 0, 0, 200);
+            confirmButton.setText("Confirm");
+            confirmButton.setPreferredSize(new Dimension(100, 30));
+            buttonsPanel.add(confirmButton, gbc);
+
+            //Back button
+            gbc.gridx = 3;
+            gbc.insets = new Insets(0, 0, 0, 15);
+            backButton.setText("Back");
+            backButton.setPreferredSize(new Dimension(100, 30));
+            buttonsPanel.add(backButton, gbc);
+            
+            mainPanel.add(buttonsPanel, BorderLayout.PAGE_START);
+            mainPanel.add(barPanel, BorderLayout.CENTER);
+            mainPanel.add(scroll, BorderLayout.PAGE_END);
+
+            //UPDATE
+            this.remove(this.background);
+            this.add(mainPanel);
+            SwingUtilities.updateComponentTreeUI(this);
+            this.setVisible(true);
+        });
+
+        //Back to main Menu
+        backButton.addActionListener((ActionEvent event) -> {
+            mainPanel.removeAll();
+            this.remove(mainPanel);
+            this.add(this.background);
+            SwingUtilities.updateComponentTreeUI(this);
+            this.setVisible(true);
+        });
+
+        //Confirm button
+        confirmButton.addActionListener((ActionEvent event) -> {
+            scoresPanel.removeAll();
+            ClassificationManager<String> classificationM = new ClassificationManager();
+            String mapSelected = (String) mapsList.getSelectedItem();
+            String difficultySelected = (String) difficultyList.getSelectedItem();
+            gbc.gridx = 0;
+            gbc.insets = new Insets(10, 30, 0, 30);
+
+            if (mapSelected != "" && difficultySelected != "") {
+                boolean check = new File("database/classifications/" + mapSelected + ".json").exists();
+                if (check) {
+                    ArrayUnorderedList<ArrayUnorderedList<String>> ok = null;
+                    ArrayUnorderedList<String> kek = null;
+                    try {
+                        ok = classificationM.getClassificationTable(mapSelected, Integer.valueOf(difficultySelected));
+                    } catch (EmptyCollectionException | FileNotFoundException ex) {
+                    }
+                    Iterator it1 = ok.iterator();
+                    int i = 0;
+                    while (it1.hasNext()) {
+                        kek = (ArrayUnorderedList<String>) it1.next();
+                        Iterator it2 = kek.iterator();
+                        String pessoa = "<html>";
+                        JLabel pessoaLabel = new JLabel();
+                        pessoaLabel.setPreferredSize(new Dimension(600, 50));
+                        pessoaLabel.setBackground(Color.black);
+                        pessoaLabel.setBorder(BorderFactory.createLineBorder(Color.black, 2));
+                        int j = 0;
+                        while (it2.hasNext()) {
+                            String value = (String) it2.next();
+                            if (j == 0) {
+                                pessoa = pessoa + "Nome: " + value + "<br/>";
+                            }
+                            if (j == 4) {
+                                pessoa = pessoa + "Pontuação: " + value + "<br/>";
+                            }
+                            j++;
+                        }
+                        pessoaLabel.setText(pessoa);
+                        gbc.gridy = i;
+                        scoresPanel.add(pessoaLabel, gbc);
+                        i++;
+                    }
+                }
+            }
+            SwingUtilities.updateComponentTreeUI(this);
+            this.setVisible(true);
+        });
+    }
+
     //SHOW INTERFACE TO USER SELECT GAME PREFERENCES
     public void pressPlayButtonMenu() {
         this.soundEnable = true;
@@ -322,7 +469,7 @@ public class MainMenu extends JFrame {
             SwingUtilities.updateComponentTreeUI(this);
             this.setVisible(true);
         });
-        
+
         //BACK TO MAIN MENU
         backButton.addActionListener((ActionEvent event) -> {
             mainPanel.removeAll();
@@ -331,7 +478,7 @@ public class MainMenu extends JFrame {
             SwingUtilities.updateComponentTreeUI(this);
             this.setVisible(true);
         });
-        
+
         //SET SOUND
         soundButton.addActionListener((ActionEvent event) -> {
             if (soundEnable) {
@@ -342,7 +489,7 @@ public class MainMenu extends JFrame {
                 soundButton.setText("Sound: ON");
             }
         });
-        
+
         //SELECT EASY DIFFICULTY
         easyButton.addActionListener((ActionEvent event) -> {
             this.setLevel(1);
@@ -350,7 +497,7 @@ public class MainMenu extends JFrame {
             normalButton.setBackground(new JButton().getBackground());
             hardButton.setBackground(new JButton().getBackground());
         });
-        
+
         //SELECT NORMAL DIFFICULTY
         normalButton.addActionListener((ActionEvent event) -> {
             this.setLevel(2);
@@ -358,7 +505,7 @@ public class MainMenu extends JFrame {
             easyButton.setBackground(new JButton().getBackground());
             hardButton.setBackground(new JButton().getBackground());
         });
-        
+
         //SELECT HARD DIFFICULTY
         hardButton.addActionListener((ActionEvent event) -> {
             this.setLevel(3);
@@ -366,7 +513,7 @@ public class MainMenu extends JFrame {
             easyButton.setBackground(new JButton().getBackground());
             normalButton.setBackground(new JButton().getBackground());
         });
-        
+
         //START SIMULATION
         simulationButton.addActionListener((ActionEvent event) -> {
             this.simulation = true;
@@ -385,7 +532,7 @@ public class MainMenu extends JFrame {
                 wait.start();
             }
         });
-        
+
         //START GAME
         startButton.addActionListener((ActionEvent event) -> {
             this.simulation = false;
@@ -416,7 +563,7 @@ public class MainMenu extends JFrame {
     public void setLevel(int level) {
         this.level = level;
     }
-    
+
     //Start sound game if is enable and start the game
     public void pressPlayButton(JLabel label) {
         Clip backgroundSound = null;
@@ -444,7 +591,7 @@ public class MainMenu extends JFrame {
         }
         return audioinputstream;
     }
-    
+
     //Show shortest path to the user
     public JLabel showPath(JLabel mainPanel) {
         String pathString = "<html>";
@@ -471,7 +618,7 @@ public class MainMenu extends JFrame {
 
         return path;
     }
-    
+
     //Show map to the user
     public JLabel showMap(JLabel mainPanel) {
         JLabel map = new JLabel();
@@ -485,12 +632,12 @@ public class MainMenu extends JFrame {
 
         return map;
     }
-    
+
     //OPEN THE GAME
     public static void main(String[] args) {
         MainMenu menu = new MainMenu();
     }
-    
+
     //Thread waits time value and then start the game
     public class Wait implements Runnable {
 
