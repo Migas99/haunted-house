@@ -38,6 +38,8 @@ public class GamePhase extends JLabel {
     private ArrayUnorderedList<JButton> portas;
     private ArrayUnorderedList<String> portasNomes;
     private boolean sound;
+    private boolean sound18;
+    private boolean simulation;
     private HauntedHouseGraph mapGraph;
     private JLabel ghost;
     private JLabel previous;
@@ -47,7 +49,8 @@ public class GamePhase extends JLabel {
     private boolean checkGhost;
     private JProgressBar healthBar;
 
-    public GamePhase(JFrame frame, JLabel mainPanel, boolean sound, HauntedHouseGraph mapGraph, JLabel previous, Clip backgroundSound, boolean checkGhost, int help) {
+    public GamePhase(JFrame frame, JLabel mainPanel, boolean sound, HauntedHouseGraph mapGraph,
+            JLabel previous, Clip backgroundSound, boolean checkGhost, int help, boolean sound18, boolean simulation) {
         this.frame = frame;
         this.mainPanel = mainPanel;
         this.sound = sound;
@@ -60,6 +63,8 @@ public class GamePhase extends JLabel {
         this.backgroundSound = backgroundSound;
         this.checkGhost = checkGhost;
         this.help = help;
+        this.sound18 = sound18;
+        this.simulation = simulation;
 
         this.setLayout(new BorderLayout());
 
@@ -144,19 +149,20 @@ public class GamePhase extends JLabel {
             giveUpScreen();
         });
 
+        //responsable to point the right direction on map is help is avaiable
         helpButton.addActionListener((ActionEvent event) -> {
             int i = 0;
             if (this.help != 0) {
                 this.help--;
                 Iterator portasIterator = this.portasNomes.iterator();
-                Iterator iterator = null;
+                Iterator iteratorShortPath = null;
                 try {
-                    iterator = mapGraph.iteratorShortestPath(mapGraph.getCurrentPosition(), mapGraph.getEndPosition());
+                    iteratorShortPath = mapGraph.iteratorShortestPath(mapGraph.getCurrentPosition(), mapGraph.getEndPosition());
                 } catch (EmptyCollectionException | VertexNotFoundException | PathNotFoundException e) {
                     e.printStackTrace();
                 }
-                iterator.next();
-                String stringPorta = (String) iterator.next();
+                iteratorShortPath.next();
+                String stringPorta = (String) iteratorShortPath.next();
                 JLabel labelSeta = new JLabel();
                 labelSeta.setIcon(new ImageIcon("resources/seta.png"));
                 labelSeta.setBackground(new Color(0, 0, 0, 0));
@@ -198,13 +204,9 @@ public class GamePhase extends JLabel {
             //UPDATE
             if (this.sound) {
                 if (this.checkGhost) {
-                    this.fantasmaSound.stop();
-                    this.fantasmaSound.flush();
-                    this.fantasmaSound.close();
+                    this.stopSound(this.fantasmaSound);
                 }
-                this.backgroundSound.stop();
-                this.backgroundSound.flush();
-                this.backgroundSound.close();
+                this.stopSound(this.backgroundSound);
             }
             this.frame.remove(giveUpLabel);
             this.frame.add(this.mainPanel);
@@ -240,13 +242,9 @@ public class GamePhase extends JLabel {
 
         //UPDATE
         if (this.sound) {
-            this.backgroundSound.stop();
-            this.backgroundSound.flush();
-            this.backgroundSound.close();
+            this.stopSound(this.backgroundSound);
             if (this.checkGhost) {
-                this.fantasmaSound.stop();
-                this.fantasmaSound.flush();
-                this.fantasmaSound.close();
+                this.stopSound(this.fantasmaSound);
             }
         }
         this.frame.remove(this);
@@ -284,13 +282,9 @@ public class GamePhase extends JLabel {
         deadLabel.add(backButton, gbc);
 
         if (this.sound) {
-            this.backgroundSound.stop();
-            this.backgroundSound.flush();
-            this.backgroundSound.close();
+            this.stopSound(this.backgroundSound);
             if (this.checkGhost) {
-                this.fantasmaSound.stop();
-                this.fantasmaSound.flush();
-                this.fantasmaSound.close();
+                this.stopSound(this.fantasmaSound);
             }
             try {
                 this.deadSound = AudioSystem.getClip();
@@ -309,9 +303,7 @@ public class GamePhase extends JLabel {
         backButton.addActionListener((ActionEvent event) -> {
             //UPDATE
             if (this.sound) {
-                this.deadSound.stop();
-                this.deadSound.flush();
-                this.deadSound.close();
+                this.stopSound(this.deadSound);
             }
             this.frame.remove(deadLabel);
             this.frame.add(this.mainPanel);
@@ -332,8 +324,13 @@ public class GamePhase extends JLabel {
 
     public AudioInputStream fantasmaSound() {
         AudioInputStream audioinputstream = null;
+        File soundFile = null;
         try {
-            File soundFile = new File("resources/fantasma+18.wav");
+            if (this.sound18) {
+                soundFile = new File("resources/fantasma+18.wav");
+            } else {
+                soundFile = new File("resources/fantasma.wav");
+            }
             audioinputstream = AudioSystem.getAudioInputStream(soundFile);
         } catch (UnsupportedAudioFileException | IOException e) {
         }
@@ -368,9 +365,7 @@ public class GamePhase extends JLabel {
             porta.addActionListener((ActionEvent event) -> {
                 if (this.checkGhost) {
                     if (this.sound) {
-                        this.fantasmaSound.stop();
-                        this.fantasmaSound.flush();
-                        this.fantasmaSound.close();
+                        this.stopSound(this.fantasmaSound);
                     }
                 }
                 try {
@@ -385,11 +380,59 @@ public class GamePhase extends JLabel {
                         this.deadScreen();
                     } else {
                         System.out.println("atual: " + this.mapGraph.getCurrentPosition());
-                        game = new GamePhase(this.frame, this.mainPanel, this.sound, this.mapGraph, this, this.backgroundSound, checkG, this.help);
+                        game = new GamePhase(this.frame, this.mainPanel, this.sound, this.mapGraph,
+                                this, this.backgroundSound, checkG, this.help, this.sound18, this.simulation);
                     }
                 } catch (VertexNotFoundException | EdgeNotFoundException ex) {
                 }
             });
+            if (this.simulation) {
+                porta.setEnabled(false);
+                if (this.simulationClick(porta)) {
+                    Thread wait = null;
+                    wait = new Thread(new Wait(porta));
+                    wait.start();
+                }
+            }
+        }
+    }
+
+    //Thread waits time value and then start the game
+    public class Wait implements Runnable {
+
+        private JButton porta;
+
+        public Wait(JButton porta) {
+            this.porta = porta;
+        }
+
+        @Override
+        public void run() {
+            try {
+                Thread.sleep(2000);
+                this.porta.setEnabled(true);
+                this.porta.doClick();
+            } catch (InterruptedException e) {
+                System.out.println("InterruptedException!");
+            }
+        }
+
+    }
+
+    public boolean simulationClick(JButton porta) {
+        Iterator iteratorShortPath = null;
+        try {
+            iteratorShortPath = mapGraph.iteratorShortestPath(mapGraph.getCurrentPosition(), mapGraph.getEndPosition());
+        } catch (EmptyCollectionException | VertexNotFoundException | PathNotFoundException e) {
+            e.printStackTrace();
+        }
+        iteratorShortPath.next();
+        String stringPorta = (String) iteratorShortPath.next();
+
+        if (porta.getText().equals(stringPorta)) {
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -419,5 +462,11 @@ public class GamePhase extends JLabel {
         if (this.mapGraph.getLevel() == 3) {
             this.ghost.setIcon(new ImageIcon("resources/giratina.gif"));
         }
+    }
+
+    public void stopSound(Clip clip) {
+        clip.stop();
+        clip.flush();
+        clip.close();
     }
 }
