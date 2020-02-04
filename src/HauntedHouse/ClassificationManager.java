@@ -98,7 +98,9 @@ public class ClassificationManager<T> implements ClassificationManagerADT<T> {
             scores.add(player.get("HealthPoints").getAsDouble());
         }
 
-        for (int i = 0; i < players.size();) {
+        boolean done = false;
+        int i = 0;
+        while (!done) {
             player = players.get(i).getAsJsonObject();
 
             if (!alreadyInTheTable.contains(i) && scores.last() == player.get("HealthPoints").getAsDouble()) {
@@ -123,6 +125,10 @@ public class ClassificationManager<T> implements ClassificationManagerADT<T> {
                 playerInfo.addToRear(player.get("HealthPoints").getAsString());
                 classificationTable.addToRear(playerInfo);
                 i = 0;
+                
+                if(alreadyInTheTable.size() == players.size()){
+                    done = true;
+                } 
 
             } else {
                 i++;
