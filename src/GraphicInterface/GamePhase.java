@@ -333,7 +333,7 @@ public class GamePhase extends JLabel {
     public AudioInputStream fantasmaSound() {
         AudioInputStream audioinputstream = null;
         try {
-            File soundFile = new File("resources/fantasma.wav");
+            File soundFile = new File("resources/fantasma+18.wav");
             audioinputstream = AudioSystem.getAudioInputStream(soundFile);
         } catch (UnsupportedAudioFileException | IOException e) {
         }
