@@ -19,8 +19,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -130,11 +128,12 @@ public class MainMenu extends JFrame {
         JPanel buttonsPanel = new JPanel(new GridBagLayout());
         JPanel barPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
-        JPanel map = new JPanel();
+        JLabel map = new JLabel();
         JComboBox mapsList = new JComboBox();
         JButton backButton = new JButton();
         JButton confirmButton = new JButton();
         mapButton.addActionListener((ActionEvent event) -> {
+            map.setText("");
             mapsList.removeAllItems();
             buttonsPanel.setPreferredSize(new Dimension(700, 65));
             barPanel.setPreferredSize(new Dimension(700, 20));
@@ -188,15 +187,10 @@ public class MainMenu extends JFrame {
                     this.mapGraph = this.mapManager.loadMapFromJSON((String) mapsList.getSelectedItem());
                 } catch (FileNotFoundException ex) {
                 }
-                try {
-                    ////////////////////////////////////////////////////////////
-                    ////////////////////////////////////////////////////////////
-                    ////////////////////////////////////////////////////////////
-                    ////////////////////////////////////////////////////////////
-                    ////////////////////////////////////////////////////////////
-                    Iterator iteratorRoom = tempMap.getAvailableDoors(tempMap.getCurrentPosition()).iterator();
-                } catch (VertexNotFoundException ex) {
-                }
+
+                map.setText(this.mapGraph.getMapPreview());
+                map.setHorizontalAlignment(SwingConstants.CENTER);
+                map.setVerticalAlignment(SwingConstants.CENTER);
             }
             SwingUtilities.updateComponentTreeUI(this);
             this.setVisible(true);
@@ -386,22 +380,21 @@ public class MainMenu extends JFrame {
 
             //sound18Button
             sound18Button.setPreferredSize(new Dimension(150, 30));
-            if(!this.sound18){
+            if (!this.sound18) {
                 sound18Button.setText("Sound +18: OFF");
-            }else{
+            } else {
                 sound18Button.setText("Sound +18: ON");
             }
             gbc.gridx = 1;
             gbc.insets = new Insets(0, 0, 0, 0);
             buttonsPanel.add(sound18Button, gbc);
-            
+
             //soundButton
             gbc.gridx = 2;
             gbc.insets = new Insets(0, 0, 0, 10);
-            if(this.soundEnable){
+            if (this.soundEnable) {
                 soundButton.setText("Sound: ON");
-            }
-            else{
+            } else {
                 soundButton.setText("Sound: OFF");
             }
             soundButton.setPreferredSize(new Dimension(100, 30));
@@ -522,7 +515,7 @@ public class MainMenu extends JFrame {
                 soundButton.setText("Sound: ON");
             }
         });
-        
+
         //DEF SOUND 18
         sound18Button.addActionListener((ActionEvent event) -> {
             if (sound18) {
@@ -590,14 +583,13 @@ public class MainMenu extends JFrame {
                 }
                 JLabel map = null;
                 Thread wait = null;
+                map = this.showMap(mainPanel);
                 if (this.level == 1) {
-                    map = this.showMap(mainPanel);
-                    wait = new Thread(new Wait(map, 5000));
+                    wait = new Thread(new Wait(map, 15000));
                 } else if (this.level == 2) {
-                    map = this.showMap(mainPanel);
-                    wait = new Thread(new Wait(map, 1000));
+                    wait = new Thread(new Wait(map, 10000));
                 } else if (this.level == 3) {
-                    wait = new Thread(new Wait(mainPanel, 0));
+                    wait = new Thread(new Wait(map, 10000));
                 }
                 wait.start();
             }
@@ -666,8 +658,9 @@ public class MainMenu extends JFrame {
     //Show map to the user
     public JLabel showMap(JLabel mainPanel) {
         JLabel map = new JLabel();
-        map.setIcon(new ImageIcon("resources/giratina.gif"));
-
+        map.setText(this.mapGraph.getMapPreview());
+        map.setHorizontalAlignment(SwingConstants.CENTER);
+        map.setVerticalAlignment(SwingConstants.CENTER);
         //UPDATE
         this.remove(mainPanel);
         this.add(map);
