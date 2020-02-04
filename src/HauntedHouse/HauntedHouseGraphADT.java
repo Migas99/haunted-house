@@ -81,5 +81,12 @@ public interface HauntedHouseGraphADT<T> extends WeightGraphADT<T> {
      * @throws FileNotFoundException if the classifications file is not found
      */
     public ArrayUnorderedList<ArrayUnorderedList<String>> getClassificationTable() throws FileNotFoundException;
+    
+    /**
+     * Method responsible to create the map preview.
+     * 
+     * @return a string that is the map preview
+     */
+    public String getMapPreview();
 
 }

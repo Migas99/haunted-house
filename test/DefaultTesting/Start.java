@@ -5,6 +5,7 @@ import Exceptions.PathNotFoundException;
 import Exceptions.VertexNotFoundException;
 import Graph.WeightDirectedMatrixGraph;
 import HauntedHouse.ClassificationManager;
+import HauntedHouse.HauntedHouseGraph;
 import HauntedHouse.MapManager;
 import LinkedList.ArrayUnorderedList;
 import java.io.FileNotFoundException;
@@ -15,7 +16,7 @@ public class Start {
 
     public static void main(String[] args) throws EmptyCollectionException, VertexNotFoundException, PathNotFoundException, FileNotFoundException, IOException {
         MapManager mapm = new MapManager();
-        WeightDirectedMatrixGraph<String> house = mapm.loadMapFromJSON("sexta-feira 13");
+        HauntedHouseGraph<String> house = mapm.loadMapFromJSON("sexta-feira 13");
 
         /*Iterator iterator = house.iteratorShortestPath("entrada", "exterior");
         double a = house.shortestPathWeight("entrada", "exterior");
@@ -47,5 +48,7 @@ public class Start {
             }
             System.out.println();
         }
+        
+        System.out.println(house.getMapPreview());
     }
 }

@@ -184,6 +184,33 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implement
         return table;
     }
 
+    /**
+     * Method responsible to create the map preview.
+     *
+     * @return a string that is the map preview
+     */
+    @Override
+    public String getMapPreview() {
+        String mapPreview = "<html><p> Como interpretar: 'Divisão' -> '[Conecção]'.</p>";
+
+        for (int i = 0; i < this.numVertices; i++) {
+            if (this.vertices[i] != "exterior") {
+                mapPreview = mapPreview + "<p>" + this.vertices[i] + " -> ";
+
+                for (int j = 0; j < this.numVertices; j++) {
+                    if (this.adjMatrix[i][j] != null && i != j) {
+                        mapPreview = mapPreview + "[" + this.vertices[j] + "]";
+                    }
+                }
+                
+                mapPreview = mapPreview + "</p>";
+            }
+        }
+
+        mapPreview = mapPreview + "</html>";
+        return mapPreview;
+    }
+
     public void setMapName(String mapName) {
         this.mapName = mapName;
     }
