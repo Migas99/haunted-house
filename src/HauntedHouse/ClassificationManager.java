@@ -19,6 +19,10 @@ public class ClassificationManager<T> implements ClassificationManagerADT<T> {
 
     private final String directory;
 
+    /**
+     * Construtor que inicializa a variàvel directory, que indica onde o nosso
+     * ficheiro classifications se encontra
+     */
     public ClassificationManager() {
         this.directory = "database/classifications.json";
     }
@@ -42,6 +46,10 @@ public class ClassificationManager<T> implements ClassificationManagerADT<T> {
         JsonArray path = new JsonArray();
         Iterator iterator = pathTaken.iterator();
 
+        /**
+         * Tentamos obter primeiro o conteúdo do ficheiro. Caso este se encontre
+         * vazio, é então criado o objecto classifications
+         */
         try {
             object = parser.parse(new FileReader(this.directory)).getAsJsonObject();
         } catch (IllegalStateException e) {
@@ -49,6 +57,10 @@ public class ClassificationManager<T> implements ClassificationManagerADT<T> {
             object.add("classifications", new JsonArray());
         }
 
+        /**
+         * Obtemos as classificações dos jogadores, dentro do JsonObject
+         * classifications e adicionamos a nova classificação
+         */
         JsonArray players = object.get("classifications").getAsJsonArray();
 
         player.addProperty("Player", playerName);
@@ -66,6 +78,9 @@ public class ClassificationManager<T> implements ClassificationManagerADT<T> {
         JsonObject jsonFile = new JsonObject();
         jsonFile.add("classifications", players);
 
+        /**
+         * No fim, damos override no ficheiro todo das classificações
+         */
         try (Writer writer = new FileWriter(this.directory)) {
             gson.toJson(jsonFile, writer);
             writer.flush();
@@ -93,16 +108,30 @@ public class ClassificationManager<T> implements ClassificationManagerADT<T> {
         JsonArray path;
         String pathtaken;
 
+        /**
+         * Obtemos todas as classificações e adicionámos a uma lista que irá os
+         * ordenar por ordem crescente
+         */
         for (int i = 0; i < players.size(); i++) {
             player = players.get(i).getAsJsonObject();
             scores.add(player.get("HealthPoints").getAsDouble());
         }
 
+        /**
+         * Enquanto o tamanho da lista alreadyInTheTable for menor que o tamanho
+         * do JsonArray que contêm a lista das classificações dos jogadores
+         */
         boolean done = false;
         int i = 0;
         while (!done) {
             player = players.get(i).getAsJsonObject();
 
+            /**
+             * Verificamos se este jogador já não foi "tomado em conta", e
+             * verificamos se a pontuação dele é equivalente à maior pontuação
+             * que se encontra atualmente na lista que contêm todas as
+             * pontuações
+             */
             if (!alreadyInTheTable.contains(i) && scores.last() == player.get("HealthPoints").getAsDouble()) {
                 alreadyInTheTable.addToRear(i);
                 scores.removeLast();
@@ -125,14 +154,16 @@ public class ClassificationManager<T> implements ClassificationManagerADT<T> {
                 playerInfo.addToRear(player.get("HealthPoints").getAsString());
                 classificationTable.addToRear(playerInfo);
                 i = 0;
-                
-                if(alreadyInTheTable.size() == players.size()){
+
+                /**
+                 * Caso as duas listas tenham o mesmo tamanho, encerramos o ciclo while
+                 */
+                if (alreadyInTheTable.size() == players.size()) {
                     done = true;
-                } 
+                }
 
             } else {
                 i++;
-
             }
 
         }
@@ -164,7 +195,7 @@ public class ClassificationManager<T> implements ClassificationManagerADT<T> {
             classificationTable = classificationTable + "Map: " + player.get("Map").getAsString() + "\n";
 
             path = player.get("Path").getAsJsonArray();
-            classificationTable = classificationTable + "Path: [";
+            classificationTable = classificationTable + "Path: [ ";
             for (int j = 0; j < path.size(); j++) {
                 classificationTable = classificationTable + path.get(i).getAsString() + " ";
             }
