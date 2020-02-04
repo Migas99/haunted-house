@@ -191,19 +191,28 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implement
      */
     @Override
     public String getMapPreview() {
-        String mapPreview = "<html><p> Como interpretar: 'Divisão' -> '[Conecção]'.</p>";
+        ArrayUnorderedList<Integer> hasGhost = new ArrayUnorderedList<>();
+        String mapPreview = "<html><p> Como interpretar: '[Divisão]' -> '[Conecção]'. Se tiver uma '*' significa que essa divisão tem fantasma!\n</p>";
 
         for (int i = 0; i < this.numVertices; i++) {
             if (this.vertices[i] != "exterior") {
-                mapPreview = mapPreview + "<p>" + this.vertices[i] + " -> ";
-
+                if (hasGhost.contains(i)) {
+                    mapPreview = mapPreview + "<p>[" + this.vertices[i] + "*] -> ";
+                } else {
+                    mapPreview = mapPreview + "<p>[" + this.vertices[i] + "] -> ";
+                }
                 for (int j = 0; j < this.numVertices; j++) {
                     if (this.adjMatrix[i][j] != null && i != j) {
-                        mapPreview = mapPreview + "[" + this.vertices[j] + "]";
+                        if (this.adjMatrix[i][j] > 0 && this.level != 3) {
+                            mapPreview = mapPreview + "[" + this.vertices[j] + "*]";
+                            hasGhost.addToRear(j);
+                        } else {
+                            mapPreview = mapPreview + "[" + this.vertices[j] + "]";
+                        }
                     }
                 }
-                
-                mapPreview = mapPreview + "</p>";
+
+                mapPreview = mapPreview + "</p>\n";
             }
         }
 

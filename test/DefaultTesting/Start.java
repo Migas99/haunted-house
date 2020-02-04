@@ -3,7 +3,6 @@ package DefaultTesting;
 import Exceptions.EmptyCollectionException;
 import Exceptions.PathNotFoundException;
 import Exceptions.VertexNotFoundException;
-import Graph.WeightDirectedMatrixGraph;
 import HauntedHouse.ClassificationManager;
 import HauntedHouse.HauntedHouseGraph;
 import HauntedHouse.MapManager;
