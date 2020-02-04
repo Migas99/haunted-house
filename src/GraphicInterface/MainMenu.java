@@ -19,13 +19,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.BorderFactory;
@@ -209,9 +205,12 @@ public class MainMenu extends JFrame {
         JButton backButton = new JButton();
         JButton confirmButton = new JButton();
         mainPanel.setLayout(new BorderLayout());
+        
         JScrollPane scroll = new JScrollPane(scoresPanel);
+        
         scoresButton.addActionListener((ActionEvent event) -> {
             mapsList.removeAllItems();
+            scoresPanel.removeAll();
             difficultyList.removeAllItems();
             buttonsPanel.setPreferredSize(new Dimension(700, 65));
             barPanel.setPreferredSize(new Dimension(700, 20));
@@ -283,7 +282,7 @@ public class MainMenu extends JFrame {
             gbc.gridx = 0;
             gbc.insets = new Insets(10, 30, 0, 30);
 
-            if (mapSelected != "" && difficultySelected != "") {
+            if (mapSelected != null && difficultySelected != null) {
                 boolean check = new File("database/classifications/" + mapSelected + ".json").exists();
                 if (check) {
                     ArrayUnorderedList<ArrayUnorderedList<String>> ok = null;
@@ -324,7 +323,7 @@ public class MainMenu extends JFrame {
             this.setVisible(true);
         });
     }
-
+    
     //SHOW INTERFACE TO USER SELECT GAME PREFERENCES
     public void pressPlayButtonMenu() {
         this.soundEnable = true;
