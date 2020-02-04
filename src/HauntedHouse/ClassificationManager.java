@@ -52,7 +52,7 @@ public class ClassificationManager<T> implements ClassificationManagerADT<T> {
          */
         try {
             object = parser.parse(new FileReader(this.directory + "/" + mapName + ".json")).getAsJsonObject();
-        } catch (IllegalStateException e) {
+        } catch (IllegalStateException | FileNotFoundException e) {
             object = new JsonObject();
             object.add("classifications", new JsonArray());
         }
@@ -124,8 +124,8 @@ public class ClassificationManager<T> implements ClassificationManagerADT<T> {
         }
 
         /**
-         * Enquanto o tamanho da lista alreadyInTheTable for menor que o tamanho
-         * do JsonArray que contêm a lista das classificações dos jogadores
+         * Enquanto o tamanho da lista alreadyInTheTable for diferente do número
+         * de players
          */
         boolean done = false;
         int playersNumber = scores.size();
