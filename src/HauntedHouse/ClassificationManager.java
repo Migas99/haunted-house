@@ -106,7 +106,17 @@ public class ClassificationManager<T> implements ClassificationManagerADT<T> {
         String difficulty = this.getDifficulty(level);
 
         JsonParser parser = new JsonParser();
-        JsonObject object = parser.parse(new FileReader(this.directory + "/" + mapName + ".json")).getAsJsonObject();
+        JsonObject object;
+
+        /**
+         * Se houver problemas, significa que ainda não existem classificações
+         */
+        try {
+            object = parser.parse(new FileReader(this.directory + "/" + mapName + ".json")).getAsJsonObject();
+        } catch (IllegalStateException | FileNotFoundException e) {
+            return classificationTable;
+        }
+
         JsonArray players = object.get("classifications").getAsJsonArray();
         JsonObject player;
         JsonArray path;
@@ -121,6 +131,14 @@ public class ClassificationManager<T> implements ClassificationManagerADT<T> {
             if (difficulty.equals(player.get("Difficulty").getAsString())) {
                 scores.add(player.get("HealthPoints").getAsDouble());
             }
+        }
+
+        /**
+         * Caso o scores esteja vazio, significa que ainda não existem
+         * classificações para aquela dificuldade
+         */
+        if (scores.isEmpty()) {
+            return classificationTable;
         }
 
         /**

@@ -66,6 +66,8 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implement
     }
 
     /**
+     * Method that based on the vertex given, returns a list of the vertexs he
+     * is connected with.
      *
      * @param vertex actual position of the player
      * @return list of locations connected to actual position
@@ -77,11 +79,13 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implement
         int vertexIndex = this.getIndex(vertex);
 
         if (this.indexIsValid(vertexIndex)) {
+
             for (int i = 0; i < this.numVertices; i++) {
                 if (this.adjMatrix[vertexIndex][i] != null && this.vertices[i] != vertex) {
                     options.addToRear(this.vertices[i]);
                 }
             }
+
         } else {
             throw new VertexNotFoundException();
         }
