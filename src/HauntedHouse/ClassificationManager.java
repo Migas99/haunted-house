@@ -159,6 +159,7 @@ public class ClassificationManager<T> implements ClassificationManagerADT<T> {
              * é a mesma da dificuldade da tabela que queremos apresentar
              */
             if (!alreadyInTheTable.contains(i) && scores.last() == player.get("HealthPoints").getAsDouble() && difficulty.equals(player.get("Difficulty").getAsString())) {
+                
                 alreadyInTheTable.addToRear(i);
                 scores.removeLast();
                 playerInfo = new ArrayUnorderedList<>();
@@ -168,6 +169,7 @@ public class ClassificationManager<T> implements ClassificationManagerADT<T> {
 
                 path = player.get("Path").getAsJsonArray();
                 pathtaken = "Path Taken: [ ";
+                
                 for (int j = 0; j < path.size(); j++) {
                     if (j == path.size() - 1) {
                         pathtaken = pathtaken + path.get(j).getAsString();
@@ -175,8 +177,9 @@ public class ClassificationManager<T> implements ClassificationManagerADT<T> {
                         pathtaken = pathtaken + path.get(j).getAsString() + " | ";
                     }
                 }
+                
                 pathtaken = pathtaken + " ]";
-
+                
                 playerInfo.addToRear(pathtaken);
                 playerInfo.addToRear(player.get("HealthPoints").getAsString());
                 classificationTable.addToRear(playerInfo);

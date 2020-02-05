@@ -41,15 +41,34 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implement
         int nextPositionIndex = this.getIndex(nextPosition);
 
         if (this.indexIsValid(nextPositionIndex)) {
+
+            /**
+             * Verificamos se existe conexão entre a posição atual e o
+             * nextPosition
+             */
             if (this.adjMatrix[positionIndex][nextPositionIndex] != null) {
+
+                /**
+                 * Trocamos de posição, adicionamos ao PathTaken a posição atual
+                 * nova e retiramos HealthPoints se a ligação tiver custo, ou
+                 * seja, se a nova posição conter fantasma
+                 */
                 this.position = nextPosition;
                 this.pathTaken.addToRear(this.position);
                 this.healthPoints = this.healthPoints - this.adjMatrix[positionIndex][nextPositionIndex];
+
                 System.out.println(this.adjMatrix[positionIndex][nextPositionIndex]);
+
+                /**
+                 * Retorna true se a nova posição tiver um fantasma e false se
+                 * não
+                 */
                 return this.adjMatrix[positionIndex][nextPositionIndex] > 0;
+
             } else {
                 throw new EdgeNotFoundException();
             }
+
         } else {
             throw new VertexNotFoundException();
         }
@@ -80,6 +99,11 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implement
 
         if (this.indexIsValid(vertexIndex)) {
 
+            /**
+             * Quando encontrarmos uma conexão diferente de null (ou seja, é
+             * possível ir para essa divisão a partir da atual), adicionamos à
+             * lista
+             */
             for (int i = 0; i < this.numVertices; i++) {
                 if (this.adjMatrix[vertexIndex][i] != null && this.vertices[i] != vertex) {
                     options.addToRear(this.vertices[i]);
@@ -278,8 +302,8 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implement
     public int getLevel() {
         return this.level;
     }
-    
-    public ArrayUnorderedList<T> getPathTaken(){
+
+    public ArrayUnorderedList<T> getPathTaken() {
         return this.pathTaken;
     }
 }

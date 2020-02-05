@@ -105,6 +105,7 @@ public class MapManager implements MapManagerADT {
                 if (connection.equals("entrada")) {
                     house.addEdge(connection, aposento, 0);
                 } else {
+
                     /**
                      * Se a connection for "exterior", significa que não terá
                      * custo e que não teremos de verificar se as suas próximas
@@ -114,6 +115,7 @@ public class MapManager implements MapManagerADT {
                     if (connection.equals("exterior")) {
                         house.addEdge(aposento, connection, 0);
                     } else {
+
                         /**
                          * Vamos buscar então se a próxima secção tem um
                          * fantasma, para definir o custo do atual vértice para
@@ -127,6 +129,10 @@ public class MapManager implements MapManagerADT {
                                 cost = room.get("fantasma").getAsDouble();
                             }
                         }
+
+                        /**
+                         * Se encontrado, é adicionada a conexão
+                         */
                         if (found) {
                             house.addEdge(aposento, connection, cost);
                         }
