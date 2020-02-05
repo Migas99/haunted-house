@@ -86,14 +86,12 @@ public class GamePhase extends JLabel {
         JPanel bottom = new JPanel(new GridBagLayout());
         JButton giveUp = new JButton();
         top.setPreferredSize(new Dimension(700, 100));
-        //top.setOpaque(false);
-        top.setBackground(Color.red);
+        top.setOpaque(false);
         center.setPreferredSize(new Dimension(700, 250));
-        //center.setOpaque(false);
-        center.setBackground(Color.green);
+        center.setOpaque(false);
         bottom.setPreferredSize(new Dimension(700, 350));
-        //bottom.setOpaque(false);
-        bottom.setBackground(Color.blue);
+        bottom.setOpaque(false);
+        this.setIcon(new ImageIcon("resources/room.png"));
 
         //////TOP
         //Health Bar
