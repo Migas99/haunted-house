@@ -85,6 +85,7 @@ public class GamePhase extends JLabel {
         JPanel center = new JPanel();
         JPanel bottom = new JPanel(new GridBagLayout());
         JButton giveUp = new JButton();
+        JButton helpButton = new JButton();
         top.setPreferredSize(new Dimension(700, 100));
         top.setOpaque(false);
         center.setPreferredSize(new Dimension(700, 250));
@@ -101,13 +102,13 @@ public class GamePhase extends JLabel {
         healthBar.setForeground(Color.green);
         healthBar.setStringPainted(true);
         healthBar.setString("" + (int) mapGraph.getHealthPoints());
-        gbc.insets = new Insets(0, 0, 0, 200);
+        gbc.insets = new Insets(0, 0, 0, 150);
         gbc.gridx = 0;
         gbc.gridy = 0;
         top.add(healthBar, gbc);
+
         //HelpButton
-        JButton helpButton = new JButton();
-        helpButton.setPreferredSize(new Dimension(100, 30));
+        helpButton.setPreferredSize(new Dimension(150, 30));
         helpButton.setText("Remaining: " + this.help);
         gbc.gridx = 1;
         gbc.insets = new Insets(0, 0, 0, 50);
@@ -118,6 +119,10 @@ public class GamePhase extends JLabel {
         gbc.gridx = 2;
         gbc.insets = new Insets(0, 0, 0, 0);
         top.add(giveUp, gbc);
+        if(simulation){
+            helpButton.setEnabled(false);
+            giveUp.setEnabled(false);
+        }
 
         //////CENTER
         if (this.checkGhost) {
@@ -147,7 +152,7 @@ public class GamePhase extends JLabel {
         this.frame.add(this);
         SwingUtilities.updateComponentTreeUI(this.frame);
         this.frame.setVisible(true);
-
+        
         giveUp.addActionListener((ActionEvent event) -> {
             giveUpScreen();
         });
@@ -189,14 +194,50 @@ public class GamePhase extends JLabel {
     public void giveUpScreen() {
         GridBagConstraints gbc = new GridBagConstraints();
         JLabel giveUpLabel = new JLabel();
-        giveUpLabel.setLayout(new GridBagLayout());
+        giveUpLabel.setIcon(new ImageIcon("resources/giveup.gif"));
+        giveUpLabel.setLayout(new BorderLayout());
+        JPanel buttonsPanel = new JPanel (new GridBagLayout());
+        JPanel textPanel = new JPanel (new GridBagLayout());
         JButton backButton = new JButton();
+        JButton resumeButton = new JButton();
+        JLabel text = new JLabel();
+        
+        buttonsPanel.setPreferredSize(new Dimension(700, 200));
+        buttonsPanel.setOpaque(false);
+        textPanel.setPreferredSize(new Dimension (700,500));
+        textPanel.setOpaque(false);
+        
+        //UPDATE
+        if (this.sound) {
+            if (this.checkGhost) {
+                this.stopSound(this.fantasmaSound);
+            }
+        }
+        
+        text.setText("<html><div style='text-align: center;'>" + "Are you sure <br/>about that?" + "</div></html>");
+        text.setFont(new Font("Arial", Font.BOLD, 50));
+        text.setHorizontalAlignment(SwingConstants.CENTER);
+        text.setVerticalAlignment(SwingConstants.CENTER);
+        text.setForeground(Color.white);
+        text.setBackground(Color.red);
+        textPanel.add(text);
+        
 
-        backButton.setText("BACK");
+        backButton.setText("YES");
         backButton.setPreferredSize(new Dimension(200, 50));
         gbc.gridx = 0;
         gbc.gridy = 0;
-        giveUpLabel.add(backButton, gbc);
+        gbc.insets = new Insets(0, 0, 0, 100);
+        buttonsPanel.add(backButton, gbc);
+
+        resumeButton.setText("NO");
+        resumeButton.setPreferredSize(new Dimension(200, 50));
+        gbc.insets = new Insets(0, 0, 0, 0);
+        gbc.gridx = 1;
+        buttonsPanel.add(resumeButton, gbc);
+        
+        giveUpLabel.add(buttonsPanel, BorderLayout.PAGE_END);
+        giveUpLabel.add(textPanel, BorderLayout.PAGE_START);
 
         //UPDATE
         this.frame.remove(this);
@@ -206,13 +247,30 @@ public class GamePhase extends JLabel {
         backButton.addActionListener((ActionEvent event) -> {
             //UPDATE
             if (this.sound) {
-                if (this.checkGhost) {
-                    this.stopSound(this.fantasmaSound);
-                }
                 this.stopSound(this.backgroundSound);
             }
             this.frame.remove(giveUpLabel);
             this.frame.add(this.mainPanel);
+            SwingUtilities.updateComponentTreeUI(this.frame);
+            this.frame.setVisible(true);
+        });
+
+        resumeButton.addActionListener((ActionEvent event) -> {
+            //UPDATE
+            if (this.sound) {
+                if (this.checkGhost) {
+                    try {
+                        this.fantasmaSound = AudioSystem.getClip();
+                        this.fantasmaSound.open(this.fantasmaSound());
+                        this.fantasmaSound.start();
+                        this.fantasmaSound.loop(backgroundSound.LOOP_CONTINUOUSLY);
+                    } catch (LineUnavailableException ex) {
+                    } catch (IOException ex) {
+                    }
+                }
+            }
+            this.frame.remove(giveUpLabel);
+            this.frame.add(this);
             SwingUtilities.updateComponentTreeUI(this.frame);
             this.frame.setVisible(true);
         });
@@ -444,7 +502,7 @@ public class GamePhase extends JLabel {
 
             porta = new JButton();
             porta.setText("<html>" + stringPorta.replace(" ", "<br/>") + "</html>");
-            porta.setPreferredSize(new Dimension(100,200));
+            porta.setPreferredSize(new Dimension(100, 200));
             porta.setIcon(new ImageIcon("resources/door.png"));
             porta.setForeground(Color.white);
             porta.setBackground(Color.black);
@@ -532,8 +590,12 @@ public class GamePhase extends JLabel {
         }
         iteratorShortPath.next();
         String stringPorta = (String) iteratorShortPath.next();
+        String portaValue = porta.getText();
+        portaValue = portaValue.replace("<html>", "");
+        portaValue = portaValue.replace("</html>", "");
+        portaValue = portaValue.replace("<br/>", "");
 
-        if (porta.getText().equals(stringPorta)) {
+        if (portaValue.equals(stringPorta)) {
             return true;
         } else {
             return false;
