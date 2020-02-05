@@ -92,7 +92,7 @@ public class GamePhase extends JLabel {
         center.setOpaque(false);
         bottom.setPreferredSize(new Dimension(700, 350));
         bottom.setOpaque(false);
-        this.setIcon(new ImageIcon("resources/room.png"));
+        this.setIcon(this.setBackgroundIcon());
 
         //////TOP
         //Health Bar
@@ -119,7 +119,7 @@ public class GamePhase extends JLabel {
         gbc.gridx = 2;
         gbc.insets = new Insets(0, 0, 0, 0);
         top.add(giveUp, gbc);
-        if(simulation){
+        if (simulation) {
             helpButton.setEnabled(false);
             giveUp.setEnabled(false);
         }
@@ -152,7 +152,7 @@ public class GamePhase extends JLabel {
         this.frame.add(this);
         SwingUtilities.updateComponentTreeUI(this.frame);
         this.frame.setVisible(true);
-        
+
         giveUp.addActionListener((ActionEvent event) -> {
             giveUpScreen();
         });
@@ -196,24 +196,24 @@ public class GamePhase extends JLabel {
         JLabel giveUpLabel = new JLabel();
         giveUpLabel.setIcon(new ImageIcon("resources/giveup.gif"));
         giveUpLabel.setLayout(new BorderLayout());
-        JPanel buttonsPanel = new JPanel (new GridBagLayout());
-        JPanel textPanel = new JPanel (new GridBagLayout());
+        JPanel buttonsPanel = new JPanel(new GridBagLayout());
+        JPanel textPanel = new JPanel(new GridBagLayout());
         JButton backButton = new JButton();
         JButton resumeButton = new JButton();
         JLabel text = new JLabel();
-        
+
         buttonsPanel.setPreferredSize(new Dimension(700, 200));
         buttonsPanel.setOpaque(false);
-        textPanel.setPreferredSize(new Dimension (700,500));
+        textPanel.setPreferredSize(new Dimension(700, 500));
         textPanel.setOpaque(false);
-        
+
         //UPDATE
         if (this.sound) {
             if (this.checkGhost) {
                 this.stopSound(this.fantasmaSound);
             }
         }
-        
+
         text.setText("<html><div style='text-align: center;'>" + "Are you sure <br/>about that?" + "</div></html>");
         text.setFont(new Font("Arial", Font.BOLD, 50));
         text.setHorizontalAlignment(SwingConstants.CENTER);
@@ -221,7 +221,6 @@ public class GamePhase extends JLabel {
         text.setForeground(Color.white);
         text.setBackground(Color.red);
         textPanel.add(text);
-        
 
         backButton.setText("YES");
         backButton.setPreferredSize(new Dimension(200, 50));
@@ -235,7 +234,7 @@ public class GamePhase extends JLabel {
         gbc.insets = new Insets(0, 0, 0, 0);
         gbc.gridx = 1;
         buttonsPanel.add(resumeButton, gbc);
-        
+
         giveUpLabel.add(buttonsPanel, BorderLayout.PAGE_END);
         giveUpLabel.add(textPanel, BorderLayout.PAGE_START);
 
@@ -503,7 +502,7 @@ public class GamePhase extends JLabel {
             porta = new JButton();
             porta.setText("<html>" + stringPorta.replace(" ", "<br/>") + "</html>");
             porta.setPreferredSize(new Dimension(100, 200));
-            porta.setIcon(new ImageIcon("resources/door.png"));
+            porta.setIcon(new ImageIcon("resources/house/door.png"));
             porta.setForeground(Color.white);
             porta.setBackground(Color.black);
             porta.setHorizontalTextPosition(JButton.CENTER);
@@ -634,5 +633,42 @@ public class GamePhase extends JLabel {
         clip.stop();
         clip.flush();
         clip.close();
+    }
+
+    public ImageIcon setBackgroundIcon() {
+        ImageIcon icon = null;
+        switch ((String) this.mapGraph.getCurrentPosition()) {
+            case "entrada":
+                icon = new ImageIcon("resources/house/entrada.jpg");
+                break;
+            case "cozinha":
+                icon = new ImageIcon("resources/house/cozinha.jpg");
+                break;
+            case "hall":
+                icon = new ImageIcon("resources/house/hall.jpg");
+                break;
+            case "escritorio":
+                icon = new ImageIcon("resources/house/escritorio.jpg");
+                break;
+            case "wc":
+                icon = new ImageIcon("resources/house/wc.jpg");
+                break;
+            case "sala de jantar":
+                icon = new ImageIcon("resources/house/sala de jantar.jpg");
+                break;
+            case "sala de estar":
+                icon = new ImageIcon("resources/house/sala de estar.jpg");
+                break;
+            case "corredor":
+                icon = new ImageIcon("resources/house/corredor.jpg");
+                break;
+            case "quarto":
+                icon = new ImageIcon("resources/house/quarto.jpg");
+                break;
+            default:
+                icon = new ImageIcon("resources/house/default.png");
+                break;
+        }
+        return icon;
     }
 }

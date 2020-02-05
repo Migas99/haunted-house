@@ -41,6 +41,28 @@
         "exterior"
       ],
       "HealthPoints": 70.0
+    },
+    {
+      "Player": "ert",
+      "Map": "sexta-feira 13",
+      "Difficulty": "Easy",
+      "Path": [
+        "entrada",
+        "hall",
+        "cozinha",
+        "sala de jantar",
+        "cozinha",
+        "hall",
+        "escritorio",
+        "wc",
+        "escritorio",
+        "quarto",
+        "corredor",
+        "sala de estar",
+        "corredor",
+        "exterior"
+      ],
+      "HealthPoints": 35.0
     }
   ]
 }
