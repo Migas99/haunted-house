@@ -26,7 +26,7 @@ public class Start {
         System.out.println(a);
         
         System.out.println(house.toString());*/
-        ClassificationManager<String> classificationM = new ClassificationManager();
+       /* ClassificationManager<String> classificationM = new ClassificationManager();
         ArrayUnorderedList<String> list = new ArrayUnorderedList<>();
        classificationM.addNewClassification("Miguel", "sexta-feira 13", list, 55, 2);
        classificationM.addNewClassification("Pedro", "sexta-feira 13", list, 95, 2);
@@ -48,6 +48,9 @@ public class Start {
             System.out.println();
         }
         
-        System.out.println(house.getMapPreview());
+        System.out.println(house.getMapPreview());*/
+       System.out.println(house.toString());
+       house.removeVertex("cozinha");
+       System.out.println(house.toString());
     }
 }

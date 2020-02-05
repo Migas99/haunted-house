@@ -72,8 +72,11 @@ public class DirectedMatrixGraph<T> implements GraphADT<T> {
         int index = this.getIndex(vertex);
 
         if (this.indexIsValid(index)) {
-            /* É eliminado o vértice a ser removido do array de vértices */
-            for (int i = index; i < this.numVertices; i++) {
+
+            /**
+             * É eliminado o vértice do array de vértices
+             */
+            for (int i = index; i < this.numVertices - 1; i++) {
                 this.vertices[i] = this.vertices[i + 1];
             }
 
@@ -83,21 +86,35 @@ public class DirectedMatrixGraph<T> implements GraphADT<T> {
              */
             for (int i = index; i < this.numVertices - 1; i++) {
                 for (int j = 0; j < this.numVertices; j++) {
-                    this.adjMatrix[j][i] = this.adjMatrix[j][i + 1];
+                    this.adjMatrix[i][j] = this.adjMatrix[i + 1][j];
                 }
             }
 
-            /* Puxamos as colunas para a "esquerda" */
+            /**
+             * É eliminado da matriz as conecções relativas ao vértice removido
+             * Puxamos as colunas para a "esquerda"
+             */
             for (int i = 0; i < this.numVertices; i++) {
                 for (int j = index; j < this.numVertices - 1; j++) {
-                    this.adjMatrix[j][i] = this.adjMatrix[j + 1][i];
+                    this.adjMatrix[i][j] = this.adjMatrix[i][j + 1];
                 }
             }
 
-            /* Preenchemos com null  */
+            /**
+             * Colocamos a null a última posição
+             */
+            this.vertices[this.numVertices - 1] = null;
+
+            /**
+             * Preenchemos com null as linhas
+             */
             for (int i = 0; i < this.numVertices; i++) {
                 this.adjMatrix[this.numVertices - 1][i] = null;
             }
+
+            /**
+             * Preenchemos com null as colunas
+             */
             for (int i = 0; i < this.numVertices; i++) {
                 this.adjMatrix[i][this.numVertices - 1] = null;
             }
