@@ -375,13 +375,13 @@ public class MainMenu extends JFrame {
             //backbutton
             gbc.gridx = 0;
             gbc.gridy = 0;
-            gbc.insets = new Insets(0, 300, 0, 10);
+            gbc.insets = new Insets(0, 450, 0, 10);
             backButton.setText("BACK");
             backButton.setPreferredSize(new Dimension(100, 30));
             buttonsPanel.add(backButton, gbc);
 
             //sound18Button
-            sound18Button.setPreferredSize(new Dimension(150, 30));
+            /*sound18Button.setPreferredSize(new Dimension(150, 30));
             if (!this.sound18) {
                 sound18Button.setText("Sound +18: OFF");
             } else {
@@ -389,7 +389,7 @@ public class MainMenu extends JFrame {
             }
             gbc.gridx = 1;
             gbc.insets = new Insets(0, 0, 0, 0);
-            buttonsPanel.add(sound18Button, gbc);
+            buttonsPanel.add(sound18Button, gbc);*/
 
             //soundButton
             gbc.gridx = 2;
