@@ -274,4 +274,8 @@ public class HauntedHouseGraph<T> extends WeightDirectedMatrixGraph<T> implement
     public int getLevel() {
         return this.level;
     }
+    
+    public ArrayUnorderedList<T> getPathTaken(){
+        return this.pathTaken;
+    }
 }

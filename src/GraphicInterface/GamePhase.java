@@ -4,6 +4,7 @@ import Exceptions.EdgeNotFoundException;
 import Exceptions.EmptyCollectionException;
 import Exceptions.PathNotFoundException;
 import Exceptions.VertexNotFoundException;
+import HauntedHouse.ClassificationManager;
 import HauntedHouse.HauntedHouseGraph;
 import LinkedList.ArrayUnorderedList;
 import java.awt.BorderLayout;
@@ -15,6 +16,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
 import javax.sound.sampled.AudioInputStream;
@@ -28,6 +30,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
 public class GamePhase extends JLabel {
@@ -48,6 +51,7 @@ public class GamePhase extends JLabel {
     private Clip fantasmaSound;
     private boolean checkGhost;
     private JProgressBar healthBar;
+    ClassificationManager manager;
 
     public GamePhase(JFrame frame, JLabel mainPanel, boolean sound, HauntedHouseGraph mapGraph,
             JLabel previous, Clip backgroundSound, boolean checkGhost, int help, boolean sound18, boolean simulation) {
@@ -65,6 +69,7 @@ public class GamePhase extends JLabel {
         this.help = help;
         this.sound18 = sound18;
         this.simulation = simulation;
+        manager = new ClassificationManager();
 
         this.setLayout(new BorderLayout());
 
@@ -221,11 +226,100 @@ public class GamePhase extends JLabel {
         winLabel.setLayout(new GridBagLayout());
         winLabel.setIcon(new ImageIcon("resources/win.gif"));
         JButton backButton = new JButton();
+        JLabel topScore = new JLabel();
+        topScore.setText("");
+
+        JLabel winText = new JLabel();
+        winText.setPreferredSize(new Dimension(500, 100));
+        String text = "<p>Congratulations " + this.mapGraph.getPlayerName() + "<p/>"
+                + "<p>Your Score Was:<p/>"
+                + "<p>" + this.mapGraph.getHealthPoints() + "<p/>";
+        winText.setText("<html><div style='text-align: center;'>" + text + "</div></html>");
+        winText.setFont(new Font("Arial", Font.BOLD, 15));
+        winText.setForeground(Color.white);
+        winText.setHorizontalAlignment(SwingConstants.CENTER);
+        winText.setVerticalAlignment(SwingConstants.CENTER);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(0, 0, 0, 0);
+        winLabel.add(winText, gbc);
+
+        topScore.setText("<html>" + this.getTopTen() + "</html>");
+        topScore.setPreferredSize(new Dimension(500, 300));
+        topScore.setForeground(Color.white);
+        topScore.setHorizontalAlignment(SwingConstants.CENTER);
+        topScore.setVerticalAlignment(SwingConstants.CENTER);
+        gbc.gridy = 1;
+        gbc.insets = new Insets(0, 0, 0, 0);
+        winLabel.add(topScore, gbc);
+
+        backButton.setText("BACK");
+        backButton.setPreferredSize(new Dimension(100, 30));
+        gbc.gridy = 2;
+        gbc.insets = new Insets(200, 0, 0, 0);
+        winLabel.add(backButton, gbc);
+
+        //UPDATE
+        if (this.sound) {
+            this.stopSound(this.backgroundSound);
+            if (this.checkGhost) {
+                this.stopSound(this.fantasmaSound);
+            }
+        }
+        this.frame.remove(this);
+        this.frame.add(winLabel);
+        SwingUtilities.updateComponentTreeUI(this.frame);
+        this.frame.setVisible(true);
+
+        backButton.addActionListener((ActionEvent event) -> {
+            //UPDATE
+            this.frame.remove(winLabel);
+            this.frame.add(this.mainPanel);
+            SwingUtilities.updateComponentTreeUI(this.frame);
+            this.frame.setVisible(true);
+        });
+    }
+
+    public String getTopTen() {
+        ArrayUnorderedList<ArrayUnorderedList<String>> ok = null;
+        String topTen = "<p>--------------------------------Top 10--------------------------<p/>";
+        try {
+            ok = this.manager.getClassificationTable(mapGraph.getMapName(), mapGraph.getLevel());
+        } catch (FileNotFoundException | EmptyCollectionException ex) {
+        }
+        ArrayUnorderedList<String> kek;
+
+        Iterator it1 = ok.iterator();
+        int k = 0;
+        while (it1.hasNext() && k < 10) {
+            kek = (ArrayUnorderedList<String>) it1.next();
+            Iterator it2 = kek.iterator();
+            int j = 0;
+            while (it2.hasNext()) {
+                String value = (String) it2.next();
+                if (j == 0) {
+                    topTen = "<p>" + topTen + "Nome: " + value + "   ";
+                }
+                if (j == 4) {
+                    topTen = topTen + "Pontuação: " + value + "<p/>";
+                }
+                j++;
+            }
+            k++;
+        }
+        return topTen;
+    }
+
+    public void simulationScreen() {
+        GridBagConstraints gbc = new GridBagConstraints();
+        JLabel winLabel = new JLabel();
+        winLabel.setLayout(new GridBagLayout());
+        winLabel.setIcon(new ImageIcon("resources/win.gif"));
+        JButton backButton = new JButton();
 
         JLabel winText = new JLabel();
         winText.setPreferredSize(new Dimension(200, 500));
-        String text = "Congratulations " + this.mapGraph.getPlayerName() + "<br>"
-                + "you didn't died";
+        String text = "Isto foi uma simulacao";
         winText.setText("<html><div style='text-align: center;'>" + text + "</div></html>");
         winText.setFont(new Font("Arial", Font.BOLD, 30));
         winText.setForeground(Color.white);
@@ -351,11 +445,16 @@ public class GamePhase extends JLabel {
             System.out.println(stringPorta);
 
             porta = new JButton();
-            porta.setText(stringPorta);
+            porta.setText("<html>" + stringPorta.replace(" ", "<br/>") + "</html>");
+            porta.setPreferredSize(new Dimension(100,200));
+            porta.setIcon(new ImageIcon("resources/door.png"));
+            porta.setForeground(Color.white);
+            porta.setBackground(Color.black);
+            porta.setHorizontalTextPosition(JButton.CENTER);
+            porta.setVerticalTextPosition(JButton.CENTER);
             this.portasNomes.addToRear(stringPorta);
             this.portas.addToRear(porta);
 
-            porta.setPreferredSize(new Dimension(100, 200));
             gbc.gridx = i;
             gbc.gridy = 0;
             gbc.insets = new Insets(0, 5, 0, 5);
@@ -375,7 +474,14 @@ public class GamePhase extends JLabel {
                         checkG = true;
                     }
                     if (this.mapGraph.isComplete()) {
-                        this.winScreen();
+                        if (!this.simulation) {
+                            this.manager.addNewClassification(mapGraph.getPlayerName(),
+                                    mapGraph.getMapName(), mapGraph.getPathTaken(),
+                                    mapGraph.getHealthPoints(), mapGraph.getLevel());
+                            this.winScreen();
+                        } else {
+                            this.simulationScreen();
+                        }
                     } else if (!this.mapGraph.isAlive()) {
                         this.deadScreen();
                     } else {
@@ -383,7 +489,7 @@ public class GamePhase extends JLabel {
                         game = new GamePhase(this.frame, this.mainPanel, this.sound, this.mapGraph,
                                 this, this.backgroundSound, checkG, this.help, this.sound18, this.simulation);
                     }
-                } catch (VertexNotFoundException | EdgeNotFoundException ex) {
+                } catch (VertexNotFoundException | EdgeNotFoundException | IOException ex) {
                 }
             });
             if (this.simulation) {

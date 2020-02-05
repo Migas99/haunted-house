@@ -59,6 +59,7 @@ public class MainMenu extends JFrame {
         this.setResizable(false);
         this.setLayout(new BorderLayout());
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setLocationRelativeTo(null);
 
         mainMenu();
 
@@ -189,6 +190,7 @@ public class MainMenu extends JFrame {
                 }
 
                 map.setText(this.mapGraph.getMapPreview());
+                map.setFont(new Font("Arial", Font.BOLD, 20));
                 map.setHorizontalAlignment(SwingConstants.CENTER);
                 map.setVerticalAlignment(SwingConstants.CENTER);
             }
@@ -630,7 +632,7 @@ public class MainMenu extends JFrame {
 
     //Show shortest path to the user
     public JLabel showPath(JLabel mainPanel) {
-        String pathString = "<html>";
+        String pathString = "";
         JLabel path = new JLabel();
         Iterator iterator = null;
         try {
@@ -643,8 +645,8 @@ public class MainMenu extends JFrame {
             pathString = pathString + "V" + "<br/>";
             pathString = pathString + iterator.next() + "<br/>";
         }
-        pathString = pathString + "<html>";
-        path.setText(pathString);
+        path.setText("<html><div style='text-align: center;'>" + pathString + "</div></html>");
+        path.setFont(new Font("Arial", Font.BOLD, 20));
         path.setHorizontalAlignment(SwingConstants.CENTER);
         //UPDATE
         this.remove(mainPanel);
@@ -659,6 +661,7 @@ public class MainMenu extends JFrame {
     public JLabel showMap(JLabel mainPanel) {
         JLabel map = new JLabel();
         map.setText(this.mapGraph.getMapPreview());
+        map.setFont(new Font("Arial", Font.BOLD, 20));
         map.setHorizontalAlignment(SwingConstants.CENTER);
         map.setVerticalAlignment(SwingConstants.CENTER);
         //UPDATE
