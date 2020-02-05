@@ -258,9 +258,9 @@ public class MainMenu extends JFrame {
             gbc.gridx = 1;
             gbc.insets = new Insets(0, 0, 0, 0);
             difficultyList.setPreferredSize(new Dimension(100, 30));
-            difficultyList.addItem("1");
-            difficultyList.addItem("2");
-            difficultyList.addItem("3");
+            difficultyList.addItem("EASY");
+            difficultyList.addItem("NORMAL");
+            difficultyList.addItem("HARD");
             difficultyList.setSelectedItem(null);
             buttonsPanel.add(difficultyList, gbc);
 
@@ -303,17 +303,18 @@ public class MainMenu extends JFrame {
             scoresPanel.removeAll();
             ClassificationManager<String> classificationM = new ClassificationManager();
             String mapSelected = (String) mapsList.getSelectedItem();
-            String difficultySelected = (String) difficultyList.getSelectedItem();
+            int difficultySelected =  1 + difficultyList.getSelectedIndex();
+            System.out.println(difficultySelected);
             gbc.gridx = 0;
             gbc.insets = new Insets(10, 30, 0, 30);
 
-            if (mapSelected != null && difficultySelected != null) {
+            if (mapSelected != null) {
                 boolean check = new File("database/classifications/" + mapSelected + ".json").exists();
                 if (check) {
                     ArrayUnorderedList<ArrayUnorderedList<String>> ok = null;
                     ArrayUnorderedList<String> kek = null;
                     try {
-                        ok = classificationM.getClassificationTable(mapSelected, Integer.valueOf(difficultySelected));
+                        ok = classificationM.getClassificationTable(mapSelected, difficultySelected);
                     } catch (EmptyCollectionException | FileNotFoundException ex) {
                     }
                     Iterator it1 = ok.iterator();
@@ -365,7 +366,7 @@ public class MainMenu extends JFrame {
         JTextField inputUsername = new JTextField();
         JButton backButton = new JButton();
         JButton soundButton = new JButton();
-        JButton sound18Button = new JButton();
+        //JButton sound18Button = new JButton();
         JButton easyButton = new JButton();
         JButton normalButton = new JButton();
         JButton hardButton = new JButton();
