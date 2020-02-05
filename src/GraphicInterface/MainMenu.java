@@ -304,11 +304,10 @@ public class MainMenu extends JFrame {
             ClassificationManager<String> classificationM = new ClassificationManager();
             String mapSelected = (String) mapsList.getSelectedItem();
             int difficultySelected =  1 + difficultyList.getSelectedIndex();
-            System.out.println(difficultySelected);
             gbc.gridx = 0;
             gbc.insets = new Insets(10, 30, 0, 30);
 
-            if (mapSelected != null) {
+            if (mapSelected != null && difficultySelected != 0) {
                 boolean check = new File("database/classifications/" + mapSelected + ".json").exists();
                 if (check) {
                     ArrayUnorderedList<ArrayUnorderedList<String>> ok = null;
