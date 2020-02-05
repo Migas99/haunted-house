@@ -41,7 +41,7 @@ public class MainMenu extends JFrame {
 
     HauntedHouseGraph mapGraph;
     boolean soundEnable = true;
-    boolean sound18 = false;
+    boolean soundBL = false;
     boolean simulation = false;
     MapManager mapManager = new MapManager();
     JButton playButton;
@@ -51,7 +51,6 @@ public class MainMenu extends JFrame {
     JLabel background = new JLabel();
     int level;
 
-    //Creatas the main menu and set value of frame
     public MainMenu() {
         super("HauntedHouse");
         this.setLocationByPlatform(true);
@@ -65,7 +64,10 @@ public class MainMenu extends JFrame {
 
         this.setVisible(true);
     }
-
+    
+    /**
+     * Sets the main menu
+     */
     public void mainMenu() {
         background.setLayout(new GridBagLayout());
         background.setIcon(new ImageIcon("resources/background.gif"));
@@ -122,7 +124,9 @@ public class MainMenu extends JFrame {
         this.add(background);
     }
 
-    //SHOW SELECTED MAP
+    /**
+     * Opens Label where the user can choose one map to watch
+     */
     public void pressMapButton() {
         GridBagConstraints gbc = new GridBagConstraints();
         JLabel mainPanel = new JLabel();
@@ -180,7 +184,9 @@ public class MainMenu extends JFrame {
             this.setVisible(true);
         });
 
-        //Show selected map
+        /**
+         * Check if any map was selected shows the map
+         */
         confirmButton.addActionListener((ActionEvent event) -> {
             HauntedHouseGraph tempMap = new HauntedHouseGraph();
             if (mapsList.getSelectedItem() != null) {
@@ -198,7 +204,9 @@ public class MainMenu extends JFrame {
             this.setVisible(true);
         });
 
-        //Back to main Menu
+        /**
+         * Go back to main menu
+         */
         backButton.addActionListener((ActionEvent event) -> {
             mainPanel.removeAll();
             this.remove(mainPanel);
@@ -208,7 +216,9 @@ public class MainMenu extends JFrame {
         });
     }
 
-    //SHOW SCORES TABLE
+    /**
+     * Show score table if user choose one map and one difficulty
+     */
     public void pressScoresButton() {
         GridBagConstraints gbc = new GridBagConstraints();
         JLabel mainPanel = new JLabel();
@@ -339,7 +349,9 @@ public class MainMenu extends JFrame {
         });
     }
 
-    //SHOW INTERFACE TO USER SELECT GAME PREFERENCES
+    /**
+     * Show menu for the user select username, map, sound and difficulty
+     */
     public void pressPlayButtonMenu() {
         GridBagConstraints gbc = new GridBagConstraints();
         JLabel mainPanel = new JLabel();
@@ -380,18 +392,20 @@ public class MainMenu extends JFrame {
             backButton.setPreferredSize(new Dimension(100, 30));
             buttonsPanel.add(backButton, gbc);
 
-            //sound18Button
+            /**
+             * This button was disable because it was used to check if the
+             * player wanted to play with sound with bad language or not
+             */
             /*sound18Button.setPreferredSize(new Dimension(150, 30));
             if (!this.sound18) {
-                sound18Button.setText("Sound +18: OFF");
+                sound18Button.setText("Sound bad language: OFF");
             } else {
-                sound18Button.setText("Sound +18: ON");
+                sound18Button.setText("Sound bad language: ON");
             }
             gbc.gridx = 1;
             gbc.insets = new Insets(0, 0, 0, 0);
             buttonsPanel.add(sound18Button, gbc);*/
-
-            //soundButton
+            //sound button
             gbc.gridx = 2;
             gbc.insets = new Insets(0, 0, 0, 10);
             if (this.soundEnable) {
@@ -498,7 +512,9 @@ public class MainMenu extends JFrame {
             this.setVisible(true);
         });
 
-        //BACK TO MAIN MENU
+        /**
+         * Go back to main meny
+         */
         backButton.addActionListener((ActionEvent event) -> {
             mainPanel.removeAll();
             this.remove(mainPanel);
@@ -507,7 +523,9 @@ public class MainMenu extends JFrame {
             this.setVisible(true);
         });
 
-        //SET SOUND
+        /**
+         * Check if user wants to play with sound the default is sound ON
+         */
         soundButton.addActionListener((ActionEvent event) -> {
             if (soundEnable) {
                 soundEnable = false;
@@ -518,18 +536,22 @@ public class MainMenu extends JFrame {
             }
         });
 
-        //DEF SOUND 18
-        sound18Button.addActionListener((ActionEvent event) -> {
-            if (sound18) {
-                sound18 = false;
-                sound18Button.setText("Sound +18: OFF");
+        /**
+         * Disabled button
+         */
+        /*sound18Button.addActionListener((ActionEvent event) -> {
+            if (soundBL) {
+                soundBL = false;
+                sound18Button.setText("Sound bad language: OFF");
             } else {
-                sound18 = true;
-                sound18Button.setText("Sound +18: ON");
+                soundBL = true;
+                sound18Button.setText("Sound bad language: ON");
             }
-        });
+        });*/
 
-        //SELECT EASY DIFFICULTY
+        /**
+         * Button to select difficulty Easy
+         */
         easyButton.addActionListener((ActionEvent event) -> {
             this.setLevel(1);
             easyButton.setBackground(new Color(204, 204, 204));
@@ -537,7 +559,9 @@ public class MainMenu extends JFrame {
             hardButton.setBackground(new JButton().getBackground());
         });
 
-        //SELECT NORMAL DIFFICULTY
+        /**
+         * Button to select difficulty Normal
+         */
         normalButton.addActionListener((ActionEvent event) -> {
             this.setLevel(2);
             normalButton.setBackground(new Color(204, 204, 204));
@@ -545,7 +569,9 @@ public class MainMenu extends JFrame {
             hardButton.setBackground(new JButton().getBackground());
         });
 
-        //SELECT HARD DIFFICULTY
+        /**
+         * Button to select difficulty Hard
+         */
         hardButton.addActionListener((ActionEvent event) -> {
             this.setLevel(3);
             hardButton.setBackground(new Color(204, 204, 204));
@@ -553,7 +579,9 @@ public class MainMenu extends JFrame {
             normalButton.setBackground(new JButton().getBackground());
         });
 
-        //START SIMULATION
+        /**
+         * Button to start simulation
+         */
         simulationButton.addActionListener((ActionEvent event) -> {
             this.simulation = true;
             if (mapsList.getSelectedItem() != null && inputUsername.getText() != null) {
@@ -572,7 +600,10 @@ public class MainMenu extends JFrame {
             }
         });
 
-        //START GAME
+        /**
+         * Button to show map and after a few seconds (depend on difficulty)
+         * start game 
+         */
         startButton.addActionListener((ActionEvent event) -> {
             this.simulation = false;
             if (mapsList.getSelectedItem() != null && inputUsername.getText() != null) {
@@ -602,7 +633,11 @@ public class MainMenu extends JFrame {
         this.level = level;
     }
 
-    //Start sound game if is enable and start the game
+    /**
+     * Start the sound when start game if sound is enable
+     * and start the game
+     * @param label is the JLabel that will be replaced by the game 
+     */
     public void pressPlayButton(JLabel label) {
         Clip backgroundSound = null;
         if (this.soundEnable) {
@@ -617,7 +652,7 @@ public class MainMenu extends JFrame {
         }
         int help = 3 - this.mapGraph.getLevel();
         GamePhase game = new GamePhase(this, this.background, this.soundEnable, this.mapGraph,
-                label, backgroundSound, false, help, this.sound18, this.simulation);
+                label, backgroundSound, false, help, this.soundBL, this.simulation);
     }
 
     public AudioInputStream backgroundSound() {
@@ -630,7 +665,11 @@ public class MainMenu extends JFrame {
         return audioinputstream;
     }
 
-    //Show shortest path to the user
+    /**
+     * show shortest path when simulation start
+     * @param mainPanel JLanel that will be removed 
+     * @return 
+     */
     public JLabel showPath(JLabel mainPanel) {
         String pathString = "";
         JLabel path = new JLabel();
@@ -657,7 +696,11 @@ public class MainMenu extends JFrame {
         return path;
     }
 
-    //Show map to the user
+    /**
+     * show map when button to start game is pressed
+     * @param mainPanel will be replaced by JLabel with map
+     * @return JLabel with the map
+     */
     public JLabel showMap(JLabel mainPanel) {
         JLabel map = new JLabel();
         map.setText(this.mapGraph.getMapPreview());
@@ -673,12 +716,17 @@ public class MainMenu extends JFrame {
         return map;
     }
 
-    //OPEN THE GAME
+    /**
+     * Main to start the project
+     * @param args 
+     */
     public static void main(String[] args) {
         MainMenu menu = new MainMenu();
     }
 
-    //Thread waits time value and then start the game
+    /**
+     * Thread responsible to start game after sleep for a determinated time
+     */
     public class Wait implements Runnable {
 
         private JLabel label;

@@ -41,7 +41,7 @@ public class GamePhase extends JLabel {
     private ArrayUnorderedList<JButton> portas;
     private ArrayUnorderedList<String> portasNomes;
     private boolean sound;
-    private boolean sound18;
+    private boolean soundBL;
     private boolean simulation;
     private HauntedHouseGraph mapGraph;
     private JLabel ghost;
@@ -54,7 +54,7 @@ public class GamePhase extends JLabel {
     ClassificationManager manager;
 
     public GamePhase(JFrame frame, JLabel mainPanel, boolean sound, HauntedHouseGraph mapGraph,
-            JLabel previous, Clip backgroundSound, boolean checkGhost, int help, boolean sound18, boolean simulation) {
+            JLabel previous, Clip backgroundSound, boolean checkGhost, int help, boolean soundBL, boolean simulation) {
         this.frame = frame;
         this.mainPanel = mainPanel;
         this.sound = sound;
@@ -67,7 +67,7 @@ public class GamePhase extends JLabel {
         this.backgroundSound = backgroundSound;
         this.checkGhost = checkGhost;
         this.help = help;
-        this.sound18 = sound18;
+        this.soundBL = soundBL;
         this.simulation = simulation;
         manager = new ClassificationManager();
 
@@ -78,7 +78,11 @@ public class GamePhase extends JLabel {
         } catch (VertexNotFoundException e) {
         }
     }
-
+    
+    /**
+     * Responsible to print the room with respective doors and if it has ghost
+     * @throws VertexNotFoundException 
+     */
     public void roomScreen() throws VertexNotFoundException {
         GridBagConstraints gbc = new GridBagConstraints();
         JPanel top = new JPanel(new GridBagLayout());
@@ -152,12 +156,17 @@ public class GamePhase extends JLabel {
         this.frame.add(this);
         SwingUtilities.updateComponentTreeUI(this.frame);
         this.frame.setVisible(true);
-
+        
+        /**
+         * Allows the player to giveup
+         */
         giveUp.addActionListener((ActionEvent event) -> {
             giveUpScreen();
         });
 
-        //responsable to point the right direction on map is help is avaiable
+        /**
+         * Responsable to point the right direction on map is help is avaiable
+         */
         helpButton.addActionListener((ActionEvent event) -> {
             int i = 0;
             if (this.help != 0) {
@@ -190,7 +199,10 @@ public class GamePhase extends JLabel {
             }
         });
     }
-
+    
+    /**
+     * Shows give up screen
+     */
     public void giveUpScreen() {
         GridBagConstraints gbc = new GridBagConstraints();
         JLabel giveUpLabel = new JLabel();
@@ -243,6 +255,10 @@ public class GamePhase extends JLabel {
         this.frame.add(giveUpLabel);
         SwingUtilities.updateComponentTreeUI(this.frame);
         this.frame.setVisible(true);
+        
+        /**
+         * Back to main menu
+         */
         backButton.addActionListener((ActionEvent event) -> {
             //UPDATE
             if (this.sound) {
@@ -253,7 +269,10 @@ public class GamePhase extends JLabel {
             SwingUtilities.updateComponentTreeUI(this.frame);
             this.frame.setVisible(true);
         });
-
+        
+        /**
+         * Continue game
+         */
         resumeButton.addActionListener((ActionEvent event) -> {
             //UPDATE
             if (this.sound) {
@@ -274,7 +293,10 @@ public class GamePhase extends JLabel {
             this.frame.setVisible(true);
         });
     }
-
+    
+    /**
+     * Show win screen with player score and top 1o
+     */
     public void winScreen() {
         GridBagConstraints gbc = new GridBagConstraints();
         JLabel winLabel = new JLabel();
@@ -325,7 +347,10 @@ public class GamePhase extends JLabel {
         this.frame.add(winLabel);
         SwingUtilities.updateComponentTreeUI(this.frame);
         this.frame.setVisible(true);
-
+        
+        /**
+         * back to main menu
+         */
         backButton.addActionListener((ActionEvent event) -> {
             //UPDATE
             this.frame.remove(winLabel);
@@ -334,7 +359,11 @@ public class GamePhase extends JLabel {
             this.frame.setVisible(true);
         });
     }
-
+    
+    /**
+     * 
+     * @return string with top 10 on that map and that difficulty
+     */
     public String getTopTen() {
         ArrayUnorderedList<ArrayUnorderedList<String>> ok = null;
         String topTen = "<p>--------------------------------Top 10--------------------------<p/>";
@@ -364,7 +393,10 @@ public class GamePhase extends JLabel {
         }
         return topTen;
     }
-
+    
+    /**
+     * show this screen after simulation ends
+     */
     public void simulationScreen() {
         GridBagConstraints gbc = new GridBagConstraints();
         JLabel winLabel = new JLabel();
@@ -400,7 +432,10 @@ public class GamePhase extends JLabel {
         this.frame.add(winLabel);
         SwingUtilities.updateComponentTreeUI(this.frame);
         this.frame.setVisible(true);
-
+        
+        /**
+         * back to main menu
+         */
         backButton.addActionListener((ActionEvent event) -> {
             //UPDATE
             this.frame.remove(winLabel);
@@ -409,7 +444,10 @@ public class GamePhase extends JLabel {
             this.frame.setVisible(true);
         });
     }
-
+    
+    /**
+     * show this screen if player dies
+     */
     public void deadScreen() {
         GridBagConstraints gbc = new GridBagConstraints();
         JLabel deadLabel = new JLabel();
@@ -448,7 +486,10 @@ public class GamePhase extends JLabel {
         this.frame.add(deadLabel);
         SwingUtilities.updateComponentTreeUI(this.frame);
         this.frame.setVisible(true);
-
+        
+        /**
+         * back to main menu
+         */
         backButton.addActionListener((ActionEvent event) -> {
             //UPDATE
             if (this.sound) {
@@ -475,7 +516,7 @@ public class GamePhase extends JLabel {
         AudioInputStream audioinputstream = null;
         File soundFile = null;
         try {
-            if (this.sound18) {
+            if (this.soundBL) {
                 soundFile = new File("resources/fantasma+18.wav");
             } else {
                 soundFile = new File("resources/fantasma.wav");
@@ -489,7 +530,12 @@ public class GamePhase extends JLabel {
     public ArrayUnorderedList<JButton> getPortas() {
         return portas;
     }
-
+    
+    /**
+     * Add button for each current room connection and his respective behavior
+     * @param label
+     * @throws VertexNotFoundException 
+     */
     public void setPortas(JPanel label) throws VertexNotFoundException {
         GridBagConstraints gbc = new GridBagConstraints();
         Iterator iterator = this.mapGraph.getAvailableDoors(this.mapGraph.getCurrentPosition()).iterator();
@@ -542,7 +588,7 @@ public class GamePhase extends JLabel {
                     } else {
                         System.out.println("atual: " + this.mapGraph.getCurrentPosition());
                         game = new GamePhase(this.frame, this.mainPanel, this.sound, this.mapGraph,
-                                this, this.backgroundSound, checkG, this.help, this.sound18, this.simulation);
+                                this, this.backgroundSound, checkG, this.help, this.soundBL, this.simulation);
                     }
                 } catch (VertexNotFoundException | EdgeNotFoundException | IOException ex) {
                 }
@@ -558,7 +604,9 @@ public class GamePhase extends JLabel {
         }
     }
 
-    //Thread waits time value and then start the game
+    /**
+     * wait 2 seconds before click next button
+     */
     public class Wait implements Runnable {
 
         private JButton porta;
@@ -579,7 +627,12 @@ public class GamePhase extends JLabel {
         }
 
     }
-
+    
+    /**
+     * determinate wich button will be clicked
+     * @param porta check if this is the next button
+     * @return if true will this is the next button to click
+     */
     public boolean simulationClick(JButton porta) {
         Iterator iteratorShortPath = null;
         try {
@@ -616,7 +669,7 @@ public class GamePhase extends JLabel {
     public void setMapGraph(HauntedHouseGraph mapGraph) {
         this.mapGraph = mapGraph;
     }
-
+    
     public void setGhost() {
         if (this.mapGraph.getLevel() == 1) {
             this.ghost.setIcon(new ImageIcon("resources/gengar.gif"));
