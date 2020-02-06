@@ -194,7 +194,7 @@ public class DirectedMatrixGraph<T> implements GraphADT<T> {
              * queue them up
              */
             for (int i = 0; i < this.numVertices; i++) {
-                if ((this.adjMatrix[dequeue][i] >= 0) && !visited[i]) {
+                if ((this.adjMatrix[dequeue][i] != null) && !visited[i]) {
                     traversalQueue.enqueue(i);
                     visited[i] = true;
                 }
@@ -242,7 +242,7 @@ public class DirectedMatrixGraph<T> implements GraphADT<T> {
              * on the stack
              */
             for (int i = 0; (i < this.numVertices) && !found; i++) {
-                if ((this.adjMatrix[peek][i] >= 0) && !visited[i]) {
+                if ((this.adjMatrix[peek][i] != null) && !visited[i]) {
                     traversalStack.push(i);
                     resultList.addToRear(this.vertices[i]);
                     visited[i] = true;
@@ -305,14 +305,20 @@ public class DirectedMatrixGraph<T> implements GraphADT<T> {
         Iterator iterator;
         int count;
 
-        /* É realizada uma travessia em profundidade para cada vértice */
+        /**
+         * É realizada uma travessia em profundidade para cada vértice
+         */
         for (int i = 0; i < this.numVertices; i++) {
 
-            /* É obtido o iterador da travessia */
+            /**
+             * É obtido o iterador da travessia
+             */
             iterator = this.iteratorDFS(this.vertices[i]);
             count = 0;
 
-            /* São adicionados todos os vértices do iterador à lista */
+            /**
+             * É realizada uma contagem
+             */
             while (iterator.hasNext()) {
                 iterator.next();
                 count++;
