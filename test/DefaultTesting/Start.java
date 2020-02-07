@@ -49,8 +49,8 @@ public class Start {
         }
         
         System.out.println(house.getMapPreview());*/
-       System.out.println(house.toString());
-       house.removeVertex("cozinha");
+       //System.out.println(house.toString());
+       //house.removeVertex("cozinha");
        System.out.println(house.toString());
     }
 }

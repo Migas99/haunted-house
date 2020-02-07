@@ -103,7 +103,8 @@ public class MapManager implements MapManagerADT {
                  * inversa
                  */
                 if (connection.equals("entrada")) {
-                    house.addEdge(connection, aposento, 0);
+                    cost = room.get("fantasma").getAsDouble();
+                    house.addEdge(connection, aposento, cost);
                 } else {
 
                     /**

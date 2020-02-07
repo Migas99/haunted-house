@@ -12,6 +12,21 @@
         "exterior"
       ],
       "HealthPoints": 80.0
+    },
+    {
+      "Player": "Miguel",
+      "Map": "sexta-feira 13",
+      "Difficulty": "Easy",
+      "Path": [
+        "entrada",
+        "cozinha",
+        "hall",
+        "cozinha",
+        "sala de jantar",
+        "sala de estar",
+        "exterior"
+      ],
+      "HealthPoints": 70.0
     }
   ]
 }
